@@ -9,6 +9,9 @@ interface CategoryPageProps {
   params: Promise<{ category: string }>;
 }
 
+// Enable ISR with revalidation every 7 days
+export const revalidate = 604800; // 7 days in seconds
+
 export async function generateStaticParams() {
   return CATEGORIES.map((category) => ({
     category,

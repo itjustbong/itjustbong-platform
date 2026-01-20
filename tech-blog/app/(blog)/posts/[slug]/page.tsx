@@ -31,6 +31,9 @@ const categoryColors: Record<string, string> = {
   ai: "bg-ai/10 text-ai border-ai/20",
 };
 
+// Enable ISR with revalidation every 7 days (can be triggered on-demand via /api/revalidate?slug=xxx)
+export const revalidate = 604800; // 7 days in seconds
+
 // Generate static params for all posts
 export async function generateStaticParams() {
   const slugs = await getAllSlugs();

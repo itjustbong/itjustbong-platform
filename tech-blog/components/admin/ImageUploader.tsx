@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,24 +16,37 @@ import {
 interface ImageUploaderProps {
   onUpload: (imageUrl: string, markdownSyntax: string) => void;
   className?: string;
+  /** 전역 클립보드 이벤트 리스너 활성화 여부 */
+  enableGlobalPaste?: boolean;
 }
 
 interface UploadState {
   status: "idle" | "uploading" | "success" | "error";
   progress: number;
   message?: string;
+  fileName?: string;
 }
 
-export function ImageUploader({ onUpload, className }: ImageUploaderProps) {
+export function ImageUploader({
+  onUpload,
+  className,
+  enableGlobalPaste = false,
+}: ImageUploaderProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [uploadState, setUploadState] = useState<UploadState>({
     status: "idle",
     progress: 0,
   });
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const uploadImage = useCallback(
     async (file: File) => {
+      // 이미 업로드 중이면 무시
+      if (uploadState.status === "uploading") {
+        return;
+      }
+
       if (!file.type.startsWith("image/")) {
         setUploadState({
           status: "error",
@@ -52,7 +65,11 @@ export function ImageUploader({ onUpload, className }: ImageUploaderProps) {
         return;
       }
 
-      setUploadState({ status: "uploading", progress: 10 });
+      setUploadState({
+        status: "uploading",
+        progress: 10,
+        fileName: file.name,
+      });
 
       try {
         const urlResponse = await fetch("/api/upload", { method: "POST" });
@@ -115,8 +132,34 @@ export function ImageUploader({ onUpload, className }: ImageUploaderProps) {
         });
       }
     },
-    [onUpload]
+    [onUpload, uploadState.status]
   );
+
+  // 전역 클립보드 이벤트 리스너
+  useEffect(() => {
+    if (!enableGlobalPaste) return;
+
+    const handleGlobalPaste = (e: ClipboardEvent) => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+
+      for (const item of items) {
+        if (item.type.startsWith("image/")) {
+          e.preventDefault();
+          const file = item.getAsFile();
+          if (file) {
+            uploadImage(file);
+            break;
+          }
+        }
+      }
+    };
+
+    document.addEventListener("paste", handleGlobalPaste);
+    return () => {
+      document.removeEventListener("paste", handleGlobalPaste);
+    };
+  }, [enableGlobalPaste, uploadImage]);
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -173,6 +216,7 @@ export function ImageUploader({ onUpload, className }: ImageUploaderProps) {
 
   return (
     <div
+      ref={containerRef}
       className={cn(
         "relative overflow-hidden rounded-xl border-2 border-dashed transition-all duration-300",
         isDragging
@@ -180,6 +224,7 @@ export function ImageUploader({ onUpload, className }: ImageUploaderProps) {
           : "border-border/50 hover:border-primary/50 hover:bg-muted/30",
         uploadState.status === "error" && "border-destructive bg-destructive/5",
         uploadState.status === "success" && "border-green-500 bg-green-500/5",
+        uploadState.status === "uploading" && "border-primary bg-primary/5",
         className
       )}
       onDragOver={handleDragOver}
@@ -270,6 +315,7 @@ export function ImageUploader({ onUpload, className }: ImageUploaderProps) {
                   strokeWidth="4"
                   strokeDasharray={`${uploadState.progress * 1.76} 176`}
                   className="text-primary transition-all duration-300"
+                  strokeLinecap="round"
                 />
               </svg>
             </div>
@@ -277,9 +323,22 @@ export function ImageUploader({ onUpload, className }: ImageUploaderProps) {
               <p className="text-foreground text-sm font-medium">
                 업로드 중...
               </p>
-              <p className="text-muted-foreground mt-1 text-xs">
-                {uploadState.progress}% 완료
-              </p>
+              {uploadState.fileName && (
+                <p className="text-muted-foreground mt-1 max-w-[200px] truncate text-xs">
+                  {uploadState.fileName}
+                </p>
+              )}
+              <div className="mt-2 flex items-center justify-center gap-2">
+                <div className="bg-muted h-1.5 w-32 overflow-hidden rounded-full">
+                  <div
+                    className="bg-primary h-full transition-all duration-300"
+                    style={{ width: `${uploadState.progress}%` }}
+                  />
+                </div>
+                <span className="text-muted-foreground text-xs font-medium">
+                  {uploadState.progress}%
+                </span>
+              </div>
             </div>
           </>
         )}
