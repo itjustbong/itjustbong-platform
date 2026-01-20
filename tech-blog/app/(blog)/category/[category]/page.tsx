@@ -1,20 +1,23 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getPostsByCategory } from "@/lib/posts";
+import {
+  getPostsByCategory,
+  getAllCategories,
+  getCategoryLabel,
+} from "@/lib/posts";
 import { PostList } from "@/components/blog/PostList";
 import { CategoryFilter } from "@/components/blog/CategoryFilter";
-import { Category, CATEGORIES, CATEGORY_LABELS } from "@/types";
 
 interface CategoryPageProps {
   params: Promise<{ category: string }>;
 }
 
-// Enable ISR with revalidation every 7 days
-export const revalidate = 604800; // 7 days in seconds
+export const revalidate = 604800;
 
 export async function generateStaticParams() {
-  return CATEGORIES.map((category) => ({
-    category,
+  const categories = await getAllCategories();
+  return categories.map((category) => ({
+    category: category.slug,
   }));
 }
 
@@ -22,14 +25,16 @@ export async function generateMetadata({
   params,
 }: CategoryPageProps): Promise<Metadata> {
   const { category } = await params;
+  const categories = await getAllCategories();
+  const categoryExists = categories.some((c) => c.slug === category);
 
-  if (!CATEGORIES.includes(category as Category)) {
+  if (!categoryExists) {
     return {
       title: "카테고리를 찾을 수 없습니다",
     };
   }
 
-  const categoryLabel = CATEGORY_LABELS[category as Category];
+  const categoryLabel = getCategoryLabel(category);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
   return {
@@ -49,18 +54,18 @@ export async function generateMetadata({
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
   const { category } = await params;
+  const categories = await getAllCategories();
+  const categoryExists = categories.some((c) => c.slug === category);
 
-  // 유효한 카테고리인지 확인
-  if (!CATEGORIES.includes(category as Category)) {
+  if (!categoryExists) {
     notFound();
   }
 
-  const posts = await getPostsByCategory(category as Category);
-  const categoryLabel = CATEGORY_LABELS[category as Category];
+  const posts = await getPostsByCategory(category);
+  const categoryLabel = getCategoryLabel(category);
 
   return (
     <div className="container py-8">
-      {/* 헤더 */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold md:text-4xl">{categoryLabel}</h1>
         <p className="text-muted-foreground mt-2">
@@ -68,12 +73,10 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         </p>
       </div>
 
-      {/* 카테고리 필터 */}
       <div className="mb-8">
-        <CategoryFilter selectedCategory={category as Category} />
+        <CategoryFilter categories={categories} selectedCategory={category} />
       </div>
 
-      {/* 글 목록 */}
       {posts.length > 0 ? (
         <PostList posts={posts} />
       ) : (

@@ -1,5 +1,5 @@
 import type { PostMeta, Category } from "@/types";
-import { getAllPosts } from "./posts";
+import { getAllPosts, getCategorySlugs } from "./posts";
 
 export interface SearchOptions {
   query?: string;
@@ -10,12 +10,10 @@ export async function searchPosts(options: SearchOptions): Promise<PostMeta[]> {
   const { query, category } = options;
   let posts = await getAllPosts();
 
-  // 카테고리 필터링
   if (category) {
     posts = posts.filter((post) => post.category === category);
   }
 
-  // 검색어 필터링
   if (query && query.trim()) {
     const searchTerm = query.toLowerCase().trim();
     posts = posts.filter((post) => {
@@ -24,7 +22,7 @@ export async function searchPosts(options: SearchOptions): Promise<PostMeta[]> {
         .toLowerCase()
         .includes(searchTerm);
       const tagsMatch = post.tags.some((tag) =>
-        tag.toLowerCase().includes(searchTerm),
+        tag.toLowerCase().includes(searchTerm)
       );
 
       return titleMatch || descriptionMatch || tagsMatch;
@@ -35,7 +33,7 @@ export async function searchPosts(options: SearchOptions): Promise<PostMeta[]> {
 }
 
 export async function searchPostsWithContent(
-  query: string,
+  query: string
 ): Promise<PostMeta[]> {
   if (!query || !query.trim()) {
     return getAllPosts();
@@ -49,45 +47,50 @@ export async function searchPostsWithContent(
   const searchTerm = query.toLowerCase().trim();
 
   try {
-    const files = await fs.readdir(POSTS_DIR);
+    const categories = await getCategorySlugs();
     const matchedPosts: PostMeta[] = [];
 
-    for (const file of files) {
-      if (!file.endsWith(".mdx")) continue;
+    for (const category of categories) {
+      const categoryPath = path.join(POSTS_DIR, category);
+      const files = await fs.readdir(categoryPath);
 
-      const filePath = path.join(POSTS_DIR, file);
-      const fileContent = await fs.readFile(filePath, "utf-8");
-      const { data, content } = matter(fileContent);
+      for (const file of files) {
+        if (!file.endsWith(".mdx")) continue;
 
-      if (data.published === false) continue;
+        const filePath = path.join(categoryPath, file);
+        const fileContent = await fs.readFile(filePath, "utf-8");
+        const { data, content } = matter(fileContent);
 
-      const titleMatch = data.title?.toLowerCase().includes(searchTerm);
-      const descriptionMatch = data.description
-        ?.toLowerCase()
-        .includes(searchTerm);
-      const contentMatch = content.toLowerCase().includes(searchTerm);
-      const tagsMatch = data.tags?.some((tag: string) =>
-        tag.toLowerCase().includes(searchTerm),
-      );
+        if (data.published === false) continue;
 
-      if (titleMatch || descriptionMatch || contentMatch || tagsMatch) {
-        matchedPosts.push({
-          slug: file.replace(".mdx", ""),
-          title: data.title,
-          description: data.description,
-          category: data.category,
-          tags: data.tags || [],
-          thumbnail: data.thumbnail,
-          createdAt: data.createdAt,
-          updatedAt: data.updatedAt,
-          published: data.published,
-        });
+        const titleMatch = data.title?.toLowerCase().includes(searchTerm);
+        const descriptionMatch = data.description
+          ?.toLowerCase()
+          .includes(searchTerm);
+        const contentMatch = content.toLowerCase().includes(searchTerm);
+        const tagsMatch = data.tags?.some((tag: string) =>
+          tag.toLowerCase().includes(searchTerm)
+        );
+
+        if (titleMatch || descriptionMatch || contentMatch || tagsMatch) {
+          matchedPosts.push({
+            slug: file.replace(".mdx", ""),
+            title: data.title,
+            description: data.description,
+            category,
+            tags: data.tags || [],
+            thumbnail: data.thumbnail,
+            createdAt: data.createdAt,
+            updatedAt: data.updatedAt,
+            published: data.published,
+          });
+        }
       }
     }
 
     return matchedPosts.sort(
       (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
   } catch {
     return [];

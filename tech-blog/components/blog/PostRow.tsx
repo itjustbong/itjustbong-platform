@@ -1,4 +1,5 @@
 import { PostMeta } from "@/types";
+import { getCategoryLabel } from "@/lib/categories";
 import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -8,14 +9,7 @@ interface PostRowProps {
   showThumbnail?: boolean;
 }
 
-const categoryLabels: Record<string, string> = {
-  frontend: "프론트엔드",
-  backend: "백엔드",
-  docker: "도커",
-  blockchain: "블록체인",
-  ai: "AI",
-};
-
+// 기본 카테고리 색상 (새 카테고리는 기본 색상 사용)
 const categoryColors: Record<string, string> = {
   frontend: "bg-frontend/10 text-frontend border-frontend/20",
   backend: "bg-backend/10 text-backend border-backend/20",
@@ -24,12 +18,17 @@ const categoryColors: Record<string, string> = {
   ai: "bg-ai/10 text-ai border-ai/20",
 };
 
+const defaultCategoryColor = "bg-primary/10 text-primary border-primary/20";
+
 function getPostThumbnail(post: PostMeta): string {
   if (post.thumbnail) {
     return post.thumbnail;
   }
-  // 썸네일이 없으면 동적 OG 이미지 URL 반환 (상대 경로 사용)
   return `/posts/${post.slug}/opengraph-image`;
+}
+
+function getCategoryColor(category: string): string {
+  return categoryColors[category] || defaultCategoryColor;
 }
 
 export function PostRow({ post, showThumbnail = true }: PostRowProps) {
@@ -43,7 +42,6 @@ export function PostRow({ post, showThumbnail = true }: PostRowProps) {
   return (
     <Link href={`/posts/${post.slug}`}>
       <article className="group border-border hover:bg-accent/30 relative flex flex-col gap-4 border-b p-6 transition-all duration-300 md:flex-row md:gap-6">
-        {/* Subtle glow effect on hover */}
         <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
           <div className="via-primary/5 absolute inset-0 bg-linear-to-r from-transparent to-transparent" />
         </div>
@@ -64,10 +62,10 @@ export function PostRow({ post, showThumbnail = true }: PostRowProps) {
             <span
               className={cn(
                 "rounded-full border px-3 py-1 text-xs font-medium transition-all duration-300 group-hover:shadow-sm",
-                categoryColors[post.category]
+                getCategoryColor(post.category)
               )}
             >
-              {categoryLabels[post.category]}
+              {getCategoryLabel(post.category)}
             </span>
             <time className="text-muted-foreground text-sm">
               {formattedDate}

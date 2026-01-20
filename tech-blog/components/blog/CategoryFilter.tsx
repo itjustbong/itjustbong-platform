@@ -2,31 +2,21 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Category, CATEGORIES, CATEGORY_LABELS } from "@/types";
-import { cn } from "@/lib/utils";
+import { CategoryInfo } from "@/types";
 
 interface CategoryFilterProps {
-  categories?: Category[];
-  selected?: Category | null;
-  selectedCategory?: Category;
-  onSelect?: (category: Category | null) => void;
+  categories: CategoryInfo[];
+  selected?: string | null;
+  selectedCategory?: string;
+  onSelect?: (category: string | null) => void;
 }
 
-const categoryColors: Record<Category, string> = {
-  frontend: "text-frontend",
-  backend: "text-backend",
-  docker: "text-docker",
-  blockchain: "text-blockchain",
-  ai: "text-ai",
-};
-
 export function CategoryFilter({
-  categories = CATEGORIES,
+  categories,
   selected,
   selectedCategory,
   onSelect,
 }: CategoryFilterProps) {
-  // 링크 기반 모드 (selectedCategory가 있으면)
   const isLinkMode = selectedCategory !== undefined || !onSelect;
   const activeCategory = selectedCategory ?? selected;
 
@@ -44,18 +34,13 @@ export function CategoryFilter({
           </Button>
           {categories.map((category) => (
             <Button
-              key={category}
-              variant={activeCategory === category ? "default" : "outline"}
+              key={category.slug}
+              variant={activeCategory === category.slug ? "default" : "outline"}
               size="sm"
               asChild
-              className={cn(
-                "shrink-0",
-                activeCategory === category && categoryColors[category]
-              )}
+              className="shrink-0"
             >
-              <Link href={`/category/${category}`}>
-                {CATEGORY_LABELS[category]}
-              </Link>
+              <Link href={`/category/${category.slug}`}>{category.label}</Link>
             </Button>
           ))}
         </div>
@@ -63,7 +48,6 @@ export function CategoryFilter({
     );
   }
 
-  // 콜백 기반 모드
   return (
     <div className="w-full overflow-x-auto">
       <div className="flex gap-2 pb-2 md:justify-center">
@@ -77,16 +61,13 @@ export function CategoryFilter({
         </Button>
         {categories.map((category) => (
           <Button
-            key={category}
-            variant={selected === category ? "default" : "outline"}
+            key={category.slug}
+            variant={selected === category.slug ? "default" : "outline"}
             size="sm"
-            onClick={() => onSelect?.(category)}
-            className={cn(
-              "shrink-0",
-              selected === category && categoryColors[category]
-            )}
+            onClick={() => onSelect?.(category.slug)}
+            className="shrink-0"
           >
-            {CATEGORY_LABELS[category]}
+            {category.label}
           </Button>
         ))}
       </div>

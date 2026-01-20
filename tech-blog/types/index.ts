@@ -1,20 +1,11 @@
-export type Category = "frontend" | "backend" | "docker" | "blockchain" | "ai";
+// 카테고리는 content/posts 폴더 구조에서 동적으로 가져옴
+export type Category = string;
 
-export const CATEGORIES: Category[] = [
-  "frontend",
-  "backend",
-  "docker",
-  "blockchain",
-  "ai",
-];
-
-export const CATEGORY_LABELS: Record<Category, string> = {
-  frontend: "프론트엔드",
-  backend: "백엔드",
-  docker: "도커",
-  blockchain: "블록체인",
-  ai: "AI",
-};
+export interface CategoryInfo {
+  slug: string;
+  label: string;
+  count: number;
+}
 
 export interface Post {
   slug: string;

@@ -29,7 +29,7 @@ import {
   Link2,
   CheckCircle2,
 } from "lucide-react";
-import { Category, CATEGORIES, CATEGORY_LABELS, Post, Draft } from "@/types";
+import { Category, CategoryInfo, Post, Draft } from "@/types";
 import Link from "next/link";
 
 interface PostFormProps {
@@ -48,24 +48,19 @@ interface FormData {
   thumbnail: string;
 }
 
-const categoryIcons: Record<Category, string> = {
-  frontend: "🎨",
-  backend: "⚙️",
-  docker: "🐳",
-  blockchain: "⛓️",
-  ai: "🤖",
-};
-
 export function PostForm({ initialData, mode, slug, draftId }: PostFormProps) {
   const router = useRouter();
+  const [categories, setCategories] = useState<CategoryInfo[]>([]);
   const [formData, setFormData] = useState<FormData>({
     title: initialData?.title || "",
     description: initialData?.description || "",
     content: initialData?.content || "",
-    category: initialData?.category || "frontend",
+    category: initialData?.category || "",
     tags: initialData?.tags || [],
     thumbnail: initialData?.thumbnail || "",
   });
+  const [newCategory, setNewCategory] = useState("");
+  const [showNewCategory, setShowNewCategory] = useState(false);
   const [tagInput, setTagInput] = useState("");
   const [showImageUploader, setShowImageUploader] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -79,6 +74,29 @@ export function PostForm({ initialData, mode, slug, draftId }: PostFormProps) {
   useEffect(() => {
     formDataRef.current = formData;
   }, [formData]);
+
+  // 카테고리 목록 가져오기
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const response = await fetch("/api/categories");
+        if (response.ok) {
+          const data = await response.json();
+          setCategories(data.categories || []);
+          // 초기 카테고리가 없으면 첫 번째 카테고리 선택
+          if (!formData.category && data.categories?.length > 0) {
+            setFormData((prev) => ({
+              ...prev,
+              category: data.categories[0].slug,
+            }));
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
+      }
+    }
+    fetchCategories();
+  }, []);
 
   // 자동 저장 (30초마다)
   useEffect(() => {
@@ -149,6 +167,24 @@ export function PostForm({ initialData, mode, slug, draftId }: PostFormProps) {
     [handleAddTag]
   );
 
+  const handleAddNewCategory = useCallback(() => {
+    const slug = newCategory
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9가-힣\s-]/g, "")
+      .replace(/\s+/g, "-");
+
+    if (slug && !categories.some((c) => c.slug === slug)) {
+      setCategories((prev) => [
+        ...prev,
+        { slug, label: newCategory, count: 0 },
+      ]);
+      setFormData((prev) => ({ ...prev, category: slug }));
+      setNewCategory("");
+      setShowNewCategory(false);
+    }
+  }, [newCategory, categories]);
+
   const handleImageUpload = useCallback(
     (imageUrl: string, markdownSyntax: string) => {
       setFormData((prev) => ({
@@ -213,6 +249,10 @@ export function PostForm({ initialData, mode, slug, draftId }: PostFormProps) {
       alert("내용을 입력해주세요.");
       return;
     }
+    if (!formData.category) {
+      alert("카테고리를 선택해주세요.");
+      return;
+    }
 
     setIsPublishing(true);
     try {
@@ -264,7 +304,7 @@ export function PostForm({ initialData, mode, slug, draftId }: PostFormProps) {
 
   return (
     <div className="from-background via-background to-muted/20 min-h-screen bg-gradient-to-br">
-      {/* 상단 헤더 - 고정 */}
+      {/* 상단 헤더 */}
       <header className="border-border/40 bg-background/80 sticky top-0 z-50 border-b backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
           <div className="flex items-center gap-4">
@@ -287,7 +327,6 @@ export function PostForm({ initialData, mode, slug, draftId }: PostFormProps) {
           </div>
 
           <div className="flex items-center gap-3">
-            {/* 저장 상태 표시 */}
             {lastSaved && (
               <div className="text-muted-foreground hidden items-center gap-1.5 text-xs sm:flex">
                 <Clock className="h-3 w-3" />
@@ -295,7 +334,6 @@ export function PostForm({ initialData, mode, slug, draftId }: PostFormProps) {
               </div>
             )}
 
-            {/* 임시저장 버튼 */}
             <Button
               type="button"
               variant="outline"
@@ -316,7 +354,6 @@ export function PostForm({ initialData, mode, slug, draftId }: PostFormProps) {
               </span>
             </Button>
 
-            {/* 발행 버튼 */}
             <Button
               type="button"
               onClick={handlePublish}
@@ -338,7 +375,6 @@ export function PostForm({ initialData, mode, slug, draftId }: PostFormProps) {
         <div className="grid gap-8 lg:grid-cols-[1fr,320px]">
           {/* 메인 에디터 영역 */}
           <div className="space-y-6">
-            {/* 제목 입력 */}
             <div className="group">
               <Input
                 value={formData.title}
@@ -349,7 +385,6 @@ export function PostForm({ initialData, mode, slug, draftId }: PostFormProps) {
               <div className="from-primary/50 via-primary/20 mt-2 h-0.5 w-full bg-gradient-to-r to-transparent opacity-0 transition-opacity group-focus-within:opacity-100" />
             </div>
 
-            {/* 설명 입력 */}
             <Input
               value={formData.description}
               onChange={(e) => handleChange("description", e.target.value)}
@@ -357,32 +392,21 @@ export function PostForm({ initialData, mode, slug, draftId }: PostFormProps) {
               className="text-muted-foreground placeholder:text-muted-foreground/40 border-0 bg-transparent px-0 text-lg focus-visible:ring-0"
             />
 
-            {/* 이미지 업로더 */}
             {showImageUploader && (
               <div className="animate-in fade-in slide-in-from-top-2 duration-300">
                 <ImageUploader onUpload={handleImageUpload} />
               </div>
             )}
 
-            {/* 마크다운 에디터 */}
             <div className="border-border/50 bg-card/50 overflow-hidden rounded-2xl border shadow-xl shadow-black/5 backdrop-blur-sm">
               <MarkdownEditor
                 value={formData.content}
                 onChange={(value) => handleChange("content", value)}
-                placeholder="여기에 마크다운으로 글을 작성하세요...
-
-# 제목을 입력하고
-**굵은 글씨**나 *기울임*을 사용해보세요.
-
-```javascript
-// 코드 블록도 지원합니다
-const hello = 'world';
-```"
+                placeholder="여기에 마크다운으로 글을 작성하세요..."
                 onImageClick={() => setShowImageUploader(!showImageUploader)}
               />
             </div>
 
-            {/* 글자 수 표시 */}
             <div className="text-muted-foreground flex items-center gap-4 text-xs">
               <span>{charCount.toLocaleString()} 자</span>
               <span>{wordCount.toLocaleString()} 단어</span>
@@ -390,30 +414,62 @@ const hello = 'world';
             </div>
           </div>
 
-          {/* 사이드바 - 메타데이터 */}
+          {/* 사이드바 */}
           <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">
             {/* 카테고리 선택 */}
             <div className="border-border/50 bg-card/50 rounded-xl border p-4 backdrop-blur-sm">
-              <div className="mb-3 flex items-center gap-2 text-sm font-medium">
-                <Folder className="text-primary h-4 w-4" />
-                카테고리
+              <div className="mb-3 flex items-center justify-between">
+                <div className="flex items-center gap-2 text-sm font-medium">
+                  <Folder className="text-primary h-4 w-4" />
+                  카테고리
+                </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowNewCategory(!showNewCategory)}
+                  className="h-6 px-2 text-xs"
+                >
+                  <Plus className="mr-1 h-3 w-3" />새 카테고리
+                </Button>
               </div>
+
+              {showNewCategory && (
+                <div className="mb-3 flex gap-2">
+                  <Input
+                    value={newCategory}
+                    onChange={(e) => setNewCategory(e.target.value)}
+                    placeholder="새 카테고리명"
+                    className="border-border/50 bg-background/50 h-8 text-sm"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        handleAddNewCategory();
+                      }
+                    }}
+                  />
+                  <Button
+                    type="button"
+                    size="sm"
+                    onClick={handleAddNewCategory}
+                    className="h-8"
+                  >
+                    추가
+                  </Button>
+                </div>
+              )}
+
               <Select
                 value={formData.category}
-                onValueChange={(value) =>
-                  handleChange("category", value as Category)
-                }
+                onValueChange={(value) => handleChange("category", value)}
               >
                 <SelectTrigger className="border-border/50 bg-background/50">
-                  <SelectValue />
+                  <SelectValue placeholder="카테고리 선택" />
                 </SelectTrigger>
                 <SelectContent>
-                  {CATEGORIES.map((cat) => (
-                    <SelectItem key={cat} value={cat}>
-                      <span className="flex items-center gap-2">
-                        <span>{categoryIcons[cat]}</span>
-                        <span>{CATEGORY_LABELS[cat]}</span>
-                      </span>
+                  {categories.map((cat) => (
+                    <SelectItem key={cat.slug} value={cat.slug}>
+                      {cat.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -492,7 +548,6 @@ const hello = 'world';
               )}
             </div>
 
-            {/* 이미지 업로드 버튼 */}
             <Button
               type="button"
               variant="outline"
@@ -503,7 +558,6 @@ const hello = 'world';
               이미지 업로드
             </Button>
 
-            {/* 작성 팁 */}
             <div className="border-border/50 from-primary/5 rounded-xl border bg-gradient-to-br to-transparent p-4">
               <div className="mb-2 flex items-center gap-2 text-sm font-medium">
                 <FileText className="text-primary h-4 w-4" />

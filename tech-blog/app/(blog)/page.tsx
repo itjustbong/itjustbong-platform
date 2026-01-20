@@ -4,56 +4,52 @@ import { Hero } from "@/components/blog/Hero";
 import { SearchBar } from "@/components/blog/SearchBar";
 import { CategoryFilter } from "@/components/blog/CategoryFilter";
 import { PostList } from "@/components/blog/PostList";
-import { Category, PostMeta } from "@/types";
+import { CategoryInfo, PostMeta } from "@/types";
 import { useEffect, useState } from "react";
-
-const CATEGORIES: Category[] = [
-  "frontend",
-  "backend",
-  "docker",
-  "blockchain",
-  "ai",
-];
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
-    null
-  );
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [posts, setPosts] = useState<PostMeta[]>([]);
+  const [categories, setCategories] = useState<CategoryInfo[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<PostMeta[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch all posts on mount
   useEffect(() => {
-    async function fetchPosts() {
+    async function fetchData() {
       try {
-        const response = await fetch("/api/posts");
-        if (response.ok) {
-          const data = await response.json();
+        const [postsRes, categoriesRes] = await Promise.all([
+          fetch("/api/posts"),
+          fetch("/api/categories"),
+        ]);
+
+        if (postsRes.ok) {
+          const data = await postsRes.json();
           setPosts(data.posts || []);
           setFilteredPosts(data.posts || []);
         }
+
+        if (categoriesRes.ok) {
+          const data = await categoriesRes.json();
+          setCategories(data.categories || []);
+        }
       } catch (error) {
-        console.error("Failed to fetch posts:", error);
+        console.error("Failed to fetch data:", error);
       } finally {
         setIsLoading(false);
       }
     }
 
-    fetchPosts();
+    fetchData();
   }, []);
 
-  // Filter posts based on search and category
   useEffect(() => {
     let filtered = [...posts];
 
-    // Category filter
     if (selectedCategory) {
       filtered = filtered.filter((post) => post.category === selectedCategory);
     }
 
-    // Search filter
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase().trim();
       filtered = filtered.filter((post) => {
@@ -71,13 +67,10 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
       <Hero />
 
-      {/* Search and Filter Section */}
       <div className="container mx-auto max-w-6xl px-4 py-8">
         <div className="flex flex-col gap-6">
-          {/* Search Bar */}
           <div className="flex justify-center">
             <SearchBar
               value={searchQuery}
@@ -86,16 +79,14 @@ export default function Home() {
             />
           </div>
 
-          {/* Category Filter */}
           <CategoryFilter
-            categories={CATEGORIES}
+            categories={categories}
             selected={selectedCategory}
             onSelect={setSelectedCategory}
           />
         </div>
       </div>
 
-      {/* Post List Section */}
       <div className="container mx-auto max-w-6xl px-4 pb-16">
         {isLoading ? (
           <div className="flex min-h-[400px] items-center justify-center">
