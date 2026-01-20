@@ -24,7 +24,8 @@ function getPostThumbnail(post: PostMeta): string {
   if (post.thumbnail) {
     return post.thumbnail;
   }
-  return `/posts/${post.slug}/opengraph-image`;
+  // 빌드 시 생성된 정적 이미지 사용
+  return `/og/${post.slug}.png`;
 }
 
 function getCategoryColor(category: string): string {
@@ -52,7 +53,7 @@ export function PostRow({ post, showThumbnail = true }: PostRowProps) {
               src={thumbnailUrl}
               alt={post.title}
               fill
-              className="object-cover transition-transform duration-500 group-hover:scale-110"
+              className="object-cover object-left-bottom transition-transform duration-500 group-hover:scale-105"
               sizes="(max-width: 768px) 100vw, 192px"
             />
           </div>

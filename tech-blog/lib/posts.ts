@@ -149,7 +149,8 @@ export function getPostThumbnail(post: PostMeta): string {
     return post.thumbnail;
   }
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-  return `${siteUrl}/posts/${post.slug}/opengraph-image`;
+  // 빌드 시 생성된 정적 이미지 사용
+  return `${siteUrl}/og/${post.slug}.png`;
 }
 
 /**

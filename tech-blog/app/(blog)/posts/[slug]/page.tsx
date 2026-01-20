@@ -58,6 +58,9 @@ export async function generateMetadata({
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Tech Blog";
 
+  // 빌드 시 생성된 정적 OG 이미지 경로
+  const ogImage = post.thumbnail || `${siteUrl}/og/${slug}.png`;
+
   return {
     title: `${post.title} | ${siteName}`,
     description: post.description,
@@ -71,11 +74,20 @@ export async function generateMetadata({
       tags: post.tags,
       url: `${siteUrl}/posts/${slug}`,
       siteName,
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: post.title,
       description: post.description,
+      images: [ogImage],
     },
     alternates: {
       canonical: `${siteUrl}/posts/${slug}`,
