@@ -7,29 +7,13 @@ import { PostContent } from "@/components/blog/PostContent";
 import { TableOfContents } from "@/components/blog/TableOfContents";
 import { AdBanner } from "@/components/ads/AdBanner";
 import { PostRow } from "@/components/blog/PostRow";
-import { cn } from "@/lib/utils";
+import { getCategoryLabel } from "@/lib/categories";
 
 interface PostPageProps {
   params: Promise<{
     slug: string;
   }>;
 }
-
-const categoryLabels: Record<string, string> = {
-  frontend: "프론트엔드",
-  backend: "백엔드",
-  docker: "도커",
-  blockchain: "블록체인",
-  ai: "AI",
-};
-
-const categoryColors: Record<string, string> = {
-  frontend: "bg-frontend/10 text-frontend border-frontend/20",
-  backend: "bg-backend/10 text-backend border-backend/20",
-  docker: "bg-docker/10 text-docker border-docker/20",
-  blockchain: "bg-blockchain/10 text-blockchain border-blockchain/20",
-  ai: "bg-ai/10 text-ai border-ai/20",
-};
 
 // Enable ISR with revalidation every 7 days (can be triggered on-demand via /api/revalidate?slug=xxx)
 export const revalidate = 604800; // 7 days in seconds
@@ -126,52 +110,45 @@ export default async function PostPage({ params }: PostPageProps) {
   const structuredData = generateArticleStructuredData(post, slug);
 
   return (
-    <div className="bg-background min-h-screen">
+    <div className="min-h-screen bg-background">
       {/* JSON-LD Structured Data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      {/* Post Header - Cleaner, more spacious design */}
-      <header className="border-border/40 from-background to-muted/20 border-b bg-linear-to-b">
-        <div className="container mx-auto max-w-4xl px-6 py-16 md:py-20">
-          <article className="space-y-6">
+
+      {/* Post Header - Clean, minimal design */}
+      <header className="border-b border-border/40">
+        <div className="mx-auto max-w-3xl px-6 py-8 md:py-10">
+          <article className="space-y-4">
             {/* Meta Information */}
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
-              <span
-                className={cn(
-                  "inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium shadow-sm transition-all hover:shadow",
-                  categoryColors[post.category]
-                )}
-              >
-                {categoryLabels[post.category]}
+            <div className="flex flex-wrap items-center gap-3 text-sm">
+              <span className="font-medium text-primary">
+                {getCategoryLabel(post.category)}
               </span>
-              <time className="text-muted-foreground font-medium">
-                {formattedDate}
-              </time>
-              <span className="text-muted-foreground/50">·</span>
-              <span className="text-muted-foreground">
-                {readingTime}분 읽기
-              </span>
+              <span className="text-muted-foreground/40">·</span>
+              <time className="text-muted-foreground">{formattedDate}</time>
+              <span className="text-muted-foreground/40">·</span>
+              <span className="text-muted-foreground">{readingTime}분 읽기</span>
             </div>
 
-            {/* Title - Larger, better spacing */}
-            <h1 className="text-foreground text-4xl leading-tight font-bold tracking-tight md:text-5xl lg:text-6xl">
+            {/* Title */}
+            <h1 className="text-3xl font-bold leading-tight tracking-tight text-foreground md:text-4xl lg:text-5xl">
               {post.title}
             </h1>
 
-            {/* Description - Better contrast */}
-            <p className="text-foreground/70 text-lg leading-relaxed md:text-xl">
+            {/* Description */}
+            <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
               {post.description}
             </p>
 
-            {/* Tags - Improved styling */}
+            {/* Tags */}
             {post.tags && post.tags.length > 0 && (
-              <div className="flex flex-wrap gap-2 pt-4">
+              <div className="flex flex-wrap gap-2 pt-2">
                 {post.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground rounded-md px-3 py-1 text-sm transition-colors"
+                    className="rounded-lg bg-muted px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
                   >
                     #{tag}
                   </span>
@@ -187,11 +164,11 @@ export default async function PostPage({ params }: PostPageProps) {
         <AdBanner slot="top-banner" position="top" />
       </div>
 
-      {/* Main Content - Better layout and spacing */}
+      {/* Main Content */}
       <main className="bg-background">
-        <div className="container mx-auto max-w-7xl px-6 py-12 md:py-16">
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1fr_280px]">
-            {/* Post Content - Centered, better max-width */}
+        <div className="mx-auto max-w-5xl px-6 py-6 md:py-8">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_200px]">
+            {/* Post Content */}
             <div className="min-w-0">
               <div className="mx-auto max-w-3xl">
                 <PostContent content={post.content} />
@@ -200,7 +177,7 @@ export default async function PostPage({ params }: PostPageProps) {
 
             {/* Table of Contents - Sticky sidebar */}
             <aside className="hidden lg:block">
-              <div className="sticky top-24">
+              <div className="sticky top-20">
                 <TableOfContents headings={headings} />
               </div>
             </aside>
@@ -213,21 +190,21 @@ export default async function PostPage({ params }: PostPageProps) {
         <AdBanner slot="bottom-banner" position="bottom" />
       </div>
 
-      {/* Related Posts - Improved section */}
+      {/* Related Posts */}
       {filteredRelatedPosts.length > 0 && (
-        <section className="border-border/40 bg-muted/20 border-t">
-          <div className="container mx-auto max-w-4xl px-6 py-16">
-            <div className="mb-8">
-              <h2 className="text-3xl font-bold tracking-tight">관련 글</h2>
-              <p className="text-muted-foreground mt-2">
+        <section className="border-t border-border/40 bg-muted/30">
+          <div className="mx-auto max-w-3xl px-6 py-10 md:py-12">
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold tracking-tight">관련 글</h2>
+              <p className="mt-1 text-sm text-muted-foreground">
                 같은 카테고리의 다른 글을 읽어보세요
               </p>
             </div>
-            <div className="space-y-6">
+            <div className="space-y-2">
               {filteredRelatedPosts.map((relatedPost) => (
                 <div
                   key={relatedPost.slug}
-                  className="border-border/50 bg-background rounded-lg border shadow-sm transition-all hover:shadow-md"
+                  className="overflow-hidden rounded-xl bg-background"
                 >
                   <PostRow post={relatedPost} showThumbnail={false} />
                 </div>

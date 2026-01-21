@@ -11,33 +11,29 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-background border-t">
-      <div className="mx-auto max-w-5xl px-4 py-8">
-        <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-          {/* Copyright */}
-          <p className="text-muted-foreground text-sm">
-            © {currentYear} Tech Blog. All rights reserved.
-          </p>
+    <footer className="border-t border-border/40">
+      <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-6">
+        {/* Copyright */}
+        <p className="text-xs text-muted-foreground">
+          {currentYear} Tech Blog
+        </p>
 
-          {/* Social Links */}
-          <div className="flex items-center gap-4">
-            {SOCIAL_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                target={link.href.startsWith("http") ? "_blank" : undefined}
-                rel={
-                  link.href.startsWith("http")
-                    ? "noopener noreferrer"
-                    : undefined
-                }
-                className="text-muted-foreground hover:text-foreground transition-colors"
-                aria-label={link.label}
-              >
-                <link.icon className="size-5" />
-              </Link>
-            ))}
-          </div>
+        {/* Social Links */}
+        <div className="flex items-center gap-3">
+          {SOCIAL_LINKS.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              target={link.href.startsWith("http") ? "_blank" : undefined}
+              rel={
+                link.href.startsWith("http") ? "noopener noreferrer" : undefined
+              }
+              className="text-muted-foreground/60 transition-colors hover:text-foreground"
+              aria-label={link.label}
+            >
+              <link.icon className="h-4 w-4" />
+            </Link>
+          ))}
         </div>
       </div>
     </footer>

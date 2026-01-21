@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { CategoryInfo } from "@/types";
 
 interface CategoryFilterProps {
@@ -20,28 +19,30 @@ export function CategoryFilter({
   const isLinkMode = selectedCategory !== undefined || !onSelect;
   const activeCategory = selectedCategory ?? selected;
 
+  const baseStyles =
+    "px-3 py-1.5 text-sm transition-colors duration-200 rounded-lg shrink-0";
+  const activeStyles = "bg-primary text-primary-foreground font-medium";
+  const inactiveStyles =
+    "text-muted-foreground hover:text-foreground hover:bg-muted/50";
+
   if (isLinkMode) {
     return (
-      <div className="w-full overflow-x-auto">
-        <div className="flex gap-2 pb-2 md:justify-center">
-          <Button
-            variant={!activeCategory ? "default" : "outline"}
-            size="sm"
-            asChild
-            className="shrink-0"
+      <div className="-mx-2 w-full overflow-x-auto px-2">
+        <div className="flex gap-1 pb-1">
+          <Link
+            href="/"
+            className={`${baseStyles} ${!activeCategory ? activeStyles : inactiveStyles}`}
           >
-            <Link href="/">전체</Link>
-          </Button>
+            전체
+          </Link>
           {categories.map((category) => (
-            <Button
+            <Link
               key={category.slug}
-              variant={activeCategory === category.slug ? "default" : "outline"}
-              size="sm"
-              asChild
-              className="shrink-0"
+              href={`/category/${category.slug}`}
+              className={`${baseStyles} ${activeCategory === category.slug ? activeStyles : inactiveStyles}`}
             >
-              <Link href={`/category/${category.slug}`}>{category.label}</Link>
-            </Button>
+              {category.label}
+            </Link>
           ))}
         </div>
       </div>
@@ -49,26 +50,22 @@ export function CategoryFilter({
   }
 
   return (
-    <div className="w-full overflow-x-auto">
-      <div className="flex gap-2 pb-2 md:justify-center">
-        <Button
-          variant={selected === null ? "default" : "outline"}
-          size="sm"
+    <div className="-mx-2 w-full overflow-x-auto px-2">
+      <div className="flex gap-1 pb-1">
+        <button
           onClick={() => onSelect?.(null)}
-          className="shrink-0"
+          className={`${baseStyles} ${selected === null ? activeStyles : inactiveStyles}`}
         >
           전체
-        </Button>
+        </button>
         {categories.map((category) => (
-          <Button
+          <button
             key={category.slug}
-            variant={selected === category.slug ? "default" : "outline"}
-            size="sm"
             onClick={() => onSelect?.(category.slug)}
-            className="shrink-0"
+            className={`${baseStyles} ${selected === category.slug ? activeStyles : inactiveStyles}`}
           >
             {category.label}
-          </Button>
+          </button>
         ))}
       </div>
     </div>

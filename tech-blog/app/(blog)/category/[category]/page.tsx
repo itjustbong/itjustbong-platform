@@ -65,27 +65,39 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   const categoryLabel = getCategoryLabel(category);
 
   return (
-    <div className="container py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold md:text-4xl">{categoryLabel}</h1>
-        <p className="text-muted-foreground mt-2">
-          {posts.length}개의 글이 있습니다
-        </p>
-      </div>
+    <div className="min-h-screen">
+      {/* Header section */}
+      <section className="border-b border-border/50 py-10 md:py-14">
+        <div className="mx-auto max-w-4xl px-6">
+          <div className="space-y-6">
+            {/* Title */}
+            <div className="space-y-2">
+              <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">
+                {categoryLabel}
+              </h1>
+              <p className="text-muted-foreground">
+                {posts.length}개의 글이 있습니다
+              </p>
+            </div>
 
-      <div className="mb-8">
-        <CategoryFilter categories={categories} selectedCategory={category} />
-      </div>
-
-      {posts.length > 0 ? (
-        <PostList posts={posts} />
-      ) : (
-        <div className="flex flex-col items-center justify-center py-16">
-          <p className="text-muted-foreground text-lg">
-            아직 작성된 글이 없습니다.
-          </p>
+            {/* Category Filter */}
+            <CategoryFilter categories={categories} selectedCategory={category} />
+          </div>
         </div>
-      )}
+      </section>
+
+      {/* Post List */}
+      <section className="py-8 md:py-12">
+        <div className="mx-auto max-w-4xl px-6">
+          {posts.length > 0 ? (
+            <PostList posts={posts} />
+          ) : (
+            <div className="flex min-h-[200px] items-center justify-center">
+              <p className="text-muted-foreground">아직 작성된 글이 없습니다.</p>
+            </div>
+          )}
+        </div>
+      </section>
     </div>
   );
 }

@@ -1,6 +1,5 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -33,28 +32,25 @@ export function SearchBar({
   }, [value]);
 
   return (
-    <div className="relative w-full max-w-2xl">
-      <div
-        className={`from-primary/20 via-primary/10 to-primary/20 absolute -inset-0.5 rounded-lg bg-linear-to-r opacity-0 blur transition-opacity duration-300 ${
-          isFocused ? "opacity-100" : ""
+    <div className="relative w-full">
+      <Search
+        className={`absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transition-colors duration-200 ${
+          isFocused ? "text-primary" : "text-muted-foreground/50"
         }`}
       />
-      <div className="relative">
-        <Search
-          className={`absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transition-colors duration-300 ${
-            isFocused ? "text-primary" : "text-muted-foreground"
-          }`}
-        />
-        <Input
-          type="text"
-          value={localValue}
-          onChange={(e) => setLocalValue(e.target.value)}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          placeholder={placeholder}
-          className="pl-10 transition-all duration-300"
-        />
-      </div>
+      <input
+        type="text"
+        value={localValue}
+        onChange={(e) => setLocalValue(e.target.value)}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        placeholder={placeholder}
+        className={`w-full rounded-xl border bg-background py-2.5 pl-10 pr-4 text-sm outline-none transition-all duration-200 placeholder:text-muted-foreground/50 ${
+          isFocused
+            ? "border-primary/50 ring-2 ring-primary/10"
+            : "border-border/50 hover:border-border"
+        }`}
+      />
     </div>
   );
 }

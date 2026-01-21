@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
 
 interface Heading {
   id: string;
@@ -64,17 +63,12 @@ export function TableOfContents({ headings, className }: TableOfContentsProps) {
   }
 
   return (
-    <nav
-      className={cn(
-        "sticky top-24 hidden max-h-[calc(100vh-8rem)] overflow-y-auto lg:block",
-        className
-      )}
-    >
-      <div className="border-border/50 bg-muted/20 rounded-xl border p-6 shadow-sm">
-        <h3 className="text-foreground mb-4 text-sm font-bold tracking-wider uppercase">
+    <nav className={`max-h-[calc(100vh-8rem)] overflow-y-auto ${className}`}>
+      <div className="border-l border-border/50 pl-4">
+        <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
           목차
         </h3>
-        <ul className="space-y-1">
+        <ul className="space-y-0.5">
           {headings.map((heading) => (
             <li
               key={heading.id}
@@ -84,13 +78,15 @@ export function TableOfContents({ headings, className }: TableOfContentsProps) {
             >
               <button
                 onClick={() => handleClick(heading.id)}
-                className={cn(
-                  "block w-full rounded-md px-3 py-2 text-left text-sm transition-all duration-200",
+                className={`relative block w-full py-1.5 text-left text-[13px] leading-snug transition-colors duration-200 ${
                   activeId === heading.id
-                    ? "bg-primary/10 text-primary font-semibold"
-                    : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-                )}
+                    ? "font-medium text-primary"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
               >
+                {activeId === heading.id && (
+                  <span className="absolute -left-4 top-0 h-full w-0.5 bg-primary" />
+                )}
                 {heading.text}
               </button>
             </li>

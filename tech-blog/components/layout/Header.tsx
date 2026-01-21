@@ -3,15 +3,18 @@ import { ThemeToggle } from "./ThemeToggle";
 
 export function Header() {
   return (
-    <header className="bg-background/80 sticky top-0 z-50 w-full border-b backdrop-blur-sm">
-      <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-md">
+      <div className="mx-auto flex h-14 max-w-4xl items-center justify-between px-6">
         {/* Logo */}
-        <Link href="/" className="text-xl font-bold tracking-tight">
+        <Link
+          href="/"
+          className="text-base font-semibold tracking-tight transition-colors hover:text-primary"
+        >
           Tech Blog
         </Link>
 
         {/* Right side actions */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center">
           <ThemeToggle />
         </div>
       </div>

@@ -12,58 +12,57 @@ export async function PostContent({ content, className }: PostContentProps) {
   return (
     <article
       className={cn(
-        "prose prose-lg dark:prose-invert max-w-none",
-        // 전체 타이포그래피 최적화
-        "prose-headings:scroll-mt-24 prose-headings:font-bold prose-headings:tracking-tight",
-        // H1 스타일
-        "prose-h1:text-4xl prose-h1:mb-8 prose-h1:mt-12 prose-h1:leading-tight",
-        // H2 스타일 - 구분선과 여백 개선
-        "prose-h2:text-3xl prose-h2:mb-6 prose-h2:mt-12 prose-h2:pb-3",
-        "prose-h2:border-b prose-h2:border-border/50",
-        // H3 스타일
-        "prose-h3:text-2xl prose-h3:mb-4 prose-h3:mt-8",
-        // H4 스타일
-        "prose-h4:text-xl prose-h4:mb-3 prose-h4:mt-6",
-        // 본문 스타일 - 가독성 향상
-        "prose-p:text-base prose-p:leading-relaxed prose-p:mb-6 prose-p:mt-0",
-        "prose-p:text-foreground/85",
-        // 링크 스타일 - 더 명확한 시각적 피드백
+        "prose prose-base dark:prose-invert max-w-none md:prose-lg",
+        // Typography optimization
+        "prose-headings:scroll-mt-20 prose-headings:font-semibold prose-headings:tracking-tight",
+        // H1 style
+        "prose-h1:text-3xl prose-h1:mb-6 prose-h1:mt-10 prose-h1:leading-tight md:prose-h1:text-4xl",
+        // H2 style - clean separator
+        "prose-h2:text-2xl prose-h2:mb-4 prose-h2:mt-10 prose-h2:pb-2 md:prose-h2:text-3xl",
+        "prose-h2:border-b prose-h2:border-border/40",
+        // H3 style
+        "prose-h3:text-xl prose-h3:mb-3 prose-h3:mt-8 md:prose-h3:text-2xl",
+        // H4 style
+        "prose-h4:text-lg prose-h4:mb-2 prose-h4:mt-6 md:prose-h4:text-xl",
+        // Paragraph style - better readability
+        "prose-p:text-[15px] prose-p:leading-[1.8] prose-p:mb-5 prose-p:mt-0 md:prose-p:text-base",
+        "prose-p:text-foreground/80",
+        // Link style
         "prose-a:text-primary prose-a:no-underline prose-a:font-medium",
-        "prose-a:decoration-primary/30 prose-a:underline-offset-4",
-        "hover:prose-a:underline hover:prose-a:decoration-primary",
-        // 리스트 스타일 - 간격 개선
-        "prose-ul:my-6 prose-ul:list-disc prose-ul:pl-6 prose-ul:space-y-2",
-        "prose-ol:my-6 prose-ol:list-decimal prose-ol:pl-6 prose-ol:space-y-2",
-        "prose-li:my-1 prose-li:text-foreground/85 prose-li:leading-relaxed",
-        // 인용문 스타일 - 더 세련된 디자인
-        "prose-blockquote:border-l-4 prose-blockquote:border-primary/40",
-        "prose-blockquote:bg-muted/30 prose-blockquote:pl-6 prose-blockquote:pr-4",
-        "prose-blockquote:py-4 prose-blockquote:my-8 prose-blockquote:rounded-r-lg",
-        "prose-blockquote:not-italic prose-blockquote:text-foreground/75",
-        // 인라인 코드 스타일
-        "prose-code:text-sm prose-code:bg-muted prose-code:text-foreground",
-        "prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded",
-        "prose-code:font-mono prose-code:font-medium",
+        "prose-a:underline-offset-4",
+        "hover:prose-a:underline",
+        // List style
+        "prose-ul:my-5 prose-ul:list-disc prose-ul:pl-5 prose-ul:space-y-1.5",
+        "prose-ol:my-5 prose-ol:list-decimal prose-ol:pl-5 prose-ol:space-y-1.5",
+        "prose-li:my-0 prose-li:text-foreground/80 prose-li:leading-[1.7]",
+        // Blockquote style - minimal
+        "prose-blockquote:border-l-2 prose-blockquote:border-primary/50",
+        "prose-blockquote:bg-transparent prose-blockquote:pl-4 prose-blockquote:pr-0",
+        "prose-blockquote:py-0 prose-blockquote:my-6",
+        "prose-blockquote:not-italic prose-blockquote:text-muted-foreground",
+        // Inline code style
+        "prose-code:text-[13px] prose-code:bg-muted prose-code:text-foreground",
+        "prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md",
+        "prose-code:font-mono prose-code:font-normal",
         "prose-code:before:content-none prose-code:after:content-none",
-        // 코드 블록 스타일 - 더 나은 가독성
-        "prose-pre:bg-muted/50 prose-pre:border prose-pre:border-border/50",
-        "prose-pre:rounded-xl prose-pre:p-6 prose-pre:my-8",
-        "prose-pre:overflow-x-auto prose-pre:text-sm prose-pre:leading-relaxed",
-        "prose-pre:shadow-sm",
-        // 이미지 스타일 - 더 나은 프레젠테이션
-        "prose-img:rounded-xl prose-img:shadow-lg prose-img:my-10",
-        "prose-img:border prose-img:border-border/30",
-        // 테이블 스타일 - 깔끔한 디자인
-        "prose-table:my-8 prose-table:border-collapse prose-table:w-full",
-        "prose-table:rounded-lg prose-table:overflow-hidden",
-        "prose-th:border prose-th:border-border prose-th:bg-muted/50",
-        "prose-th:px-4 prose-th:py-3 prose-th:text-left prose-th:font-semibold",
-        "prose-td:border prose-td:border-border prose-td:px-4 prose-td:py-3",
-        // 구분선 - 더 부드러운 스타일
-        "prose-hr:my-12 prose-hr:border-border/30",
+        // Code block style
+        "prose-pre:bg-muted/60 prose-pre:border prose-pre:border-border/40",
+        "prose-pre:rounded-xl prose-pre:p-5 prose-pre:my-6",
+        "prose-pre:overflow-x-auto prose-pre:text-[13px] prose-pre:leading-relaxed",
+        // Image style
+        "prose-img:rounded-xl prose-img:my-8",
+        "prose-img:border prose-img:border-border/20",
+        // Table style
+        "prose-table:my-6 prose-table:border-collapse prose-table:w-full",
+        "prose-table:text-sm",
+        "prose-th:border prose-th:border-border/50 prose-th:bg-muted/40",
+        "prose-th:px-3 prose-th:py-2 prose-th:text-left prose-th:font-medium",
+        "prose-td:border prose-td:border-border/50 prose-td:px-3 prose-td:py-2",
+        // Horizontal rule
+        "prose-hr:my-10 prose-hr:border-border/40",
         // Strong, em
-        "prose-strong:font-bold prose-strong:text-foreground",
-        "prose-em:italic prose-em:text-foreground/90",
+        "prose-strong:font-semibold prose-strong:text-foreground",
+        "prose-em:italic prose-em:text-foreground/85",
         className
       )}
     >
