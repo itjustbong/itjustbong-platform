@@ -3,14 +3,52 @@ import { verifyAuth } from "@/lib/auth";
 import { getAllPosts, createPost } from "@/lib/posts";
 import { revalidatePath } from "next/cache";
 
-// GET /api/posts - 모든 글 목록 조회
-export async function GET() {
+// GET /api/posts - 글 목록 조회 (페이지네이션 지원)
+export async function GET(request: NextRequest) {
   try {
-    const posts = await getAllPosts();
+    const { searchParams } = new URL(request.url);
+    const page = parseInt(searchParams.get("page") || "1", 10);
+    const limit = parseInt(searchParams.get("limit") || "10", 10);
+    const category = searchParams.get("category");
+    const search = searchParams.get("search");
+
+    let posts = await getAllPosts();
+
+    // 카테고리 필터링
+    if (category) {
+      posts = posts.filter((post) => post.category === category);
+    }
+
+    // 검색어 필터링
+    if (search) {
+      const query = search.toLowerCase().trim();
+      posts = posts.filter((post) => {
+        const titleMatch = post.title.toLowerCase().includes(query);
+        const descriptionMatch = post.description.toLowerCase().includes(query);
+        const tagsMatch = post.tags.some((tag) =>
+          tag.toLowerCase().includes(query)
+        );
+        return titleMatch || descriptionMatch || tagsMatch;
+      });
+    }
+
+    const total = posts.length;
+    const totalPages = Math.ceil(total / limit);
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
+    const paginatedPosts = posts.slice(startIndex, endIndex);
+
     return NextResponse.json({
       success: true,
-      posts,
-      total: posts.length,
+      posts: paginatedPosts,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages,
+        hasNext: page < totalPages,
+        hasPrev: page > 1,
+      },
     });
   } catch (error) {
     return NextResponse.json(

@@ -2,33 +2,59 @@
 
 import { SearchBar } from "@/components/blog/SearchBar";
 import { CategorySidebar } from "@/components/blog/CategorySidebar";
-import { PostList } from "@/components/blog/PostList";
+import { PostList, PaginationInfo } from "@/components/blog/PostList";
 import { CategoryInfo, PostMeta } from "@/types";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [posts, setPosts] = useState<PostMeta[]>([]);
   const [categories, setCategories] = useState<CategoryInfo[]>([]);
-  const [filteredPosts, setFilteredPosts] = useState<PostMeta[]>([]);
+  const [pagination, setPagination] = useState<PaginationInfo | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
+  const [totalPostCount, setTotalPostCount] = useState(0);
 
-  // Calculate total post count
-  const totalPostCount = posts.length;
+  const fetchPosts = useCallback(
+    async (page: number, category: string | null, search: string) => {
+      setIsLoading(true);
+      try {
+        const params = new URLSearchParams();
+        params.set("page", page.toString());
+        params.set("limit", "10");
+        if (category) params.set("category", category);
+        if (search.trim()) params.set("search", search.trim());
 
+        const res = await fetch(`/api/posts?${params.toString()}`);
+        if (res.ok) {
+          const data = await res.json();
+          setPosts(data.posts || []);
+          setPagination(data.pagination || null);
+        }
+      } catch (error) {
+        console.error("Failed to fetch posts:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    []
+  );
+
+  // 초기 데이터 로드 및 전체 포스트 수 가져오기
   useEffect(() => {
-    async function fetchData() {
+    async function fetchInitialData() {
       try {
         const [postsRes, categoriesRes] = await Promise.all([
-          fetch("/api/posts"),
+          fetch("/api/posts?page=1&limit=10"),
           fetch("/api/categories"),
         ]);
 
         if (postsRes.ok) {
           const data = await postsRes.json();
           setPosts(data.posts || []);
-          setFilteredPosts(data.posts || []);
+          setPagination(data.pagination || null);
+          setTotalPostCount(data.pagination?.total || 0);
         }
 
         if (categoriesRes.ok) {
@@ -42,30 +68,20 @@ export default function Home() {
       }
     }
 
-    fetchData();
+    fetchInitialData();
   }, []);
 
+  // 검색어나 카테고리 변경 시 페이지 리셋 및 재조회
   useEffect(() => {
-    let filtered = [...posts];
+    setCurrentPage(1);
+    fetchPosts(1, selectedCategory, searchQuery);
+  }, [searchQuery, selectedCategory, fetchPosts]);
 
-    if (selectedCategory) {
-      filtered = filtered.filter((post) => post.category === selectedCategory);
-    }
-
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase().trim();
-      filtered = filtered.filter((post) => {
-        const titleMatch = post.title.toLowerCase().includes(query);
-        const descriptionMatch = post.description.toLowerCase().includes(query);
-        const tagsMatch = post.tags.some((tag) =>
-          tag.toLowerCase().includes(query)
-        );
-        return titleMatch || descriptionMatch || tagsMatch;
-      });
-    }
-
-    setFilteredPosts(filtered);
-  }, [searchQuery, selectedCategory, posts]);
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    fetchPosts(page, selectedCategory, searchQuery);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <div className="min-h-screen">
@@ -97,12 +113,16 @@ export default function Home() {
             {isLoading ? (
               <div className="flex min-h-[300px] items-center justify-center">
                 <div className="flex items-center gap-3">
-                  <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                  <div className="border-primary h-5 w-5 animate-spin rounded-full border-2 border-t-transparent" />
                   <p className="text-muted-foreground">로딩 중...</p>
                 </div>
               </div>
             ) : (
-              <PostList posts={filteredPosts} />
+              <PostList
+                posts={posts}
+                pagination={pagination || undefined}
+                onPageChange={handlePageChange}
+              />
             )}
           </main>
 
