@@ -1,10 +1,9 @@
 import Link from "next/link";
-import { Github, Twitter, Rss } from "lucide-react";
+import { Github, Linkedin, Rss } from "lucide-react";
 
 const SOCIAL_LINKS = [
-  { href: "https://github.com", label: "GitHub", icon: Github },
-  { href: "https://twitter.com", label: "Twitter", icon: Twitter },
-  { href: "/rss.xml", label: "RSS", icon: Rss },
+  { href: "https://github.com/itjustbong", label: "GitHub", icon: Github },
+  { href: "https://www.linkedin.com/in/%EC%8A%B9%EC%9A%B0-%EB%B4%89-19108514a/", label: "LinkedIn", icon: Linkedin },
 ];
 
 export function Footer() {
@@ -12,10 +11,10 @@ export function Footer() {
 
   return (
     <footer className="border-t border-border/40">
-      <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-6">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
         {/* Copyright */}
         <p className="text-xs text-muted-foreground">
-          {currentYear} Tech Blog
+           by itjustbong
         </p>
 
         {/* Social Links */}
