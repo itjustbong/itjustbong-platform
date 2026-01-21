@@ -119,7 +119,7 @@ export default async function PostPage({ params }: PostPageProps) {
 
       {/* Post Header - Clean, minimal design */}
       <header className="border-b border-border/40">
-        <div className="mx-auto max-w-3xl px-6 py-8 md:py-10">
+        <div className="mx-auto max-w-7xl px-6 py-8 md:py-10">
           <article className="space-y-4">
             {/* Meta Information */}
             <div className="flex flex-wrap items-center gap-3 text-sm">
@@ -127,7 +127,7 @@ export default async function PostPage({ params }: PostPageProps) {
                 {getCategoryLabel(post.category)}
               </span>
               <span className="text-muted-foreground/40">·</span>
-              <time className="text-muted-foreground">{formattedDate}</time>
+              <time dateTime={post.createdAt} className="text-muted-foreground">{formattedDate}</time>
               <span className="text-muted-foreground/40">·</span>
               <span className="text-muted-foreground">{readingTime}분 읽기</span>
             </div>
@@ -166,11 +166,11 @@ export default async function PostPage({ params }: PostPageProps) {
 
       {/* Main Content */}
       <main className="bg-background">
-        <div className="mx-auto max-w-5xl px-6 py-6 md:py-8">
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_200px]">
+        <div className="mx-auto max-w-[90rem] px-6 py-6 md:py-8">
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_280px]">
             {/* Post Content */}
             <div className="min-w-0">
-              <div className="mx-auto max-w-3xl">
+              <div className="mx-auto max-w-4xl">
                 <PostContent content={post.content} />
               </div>
             </div>

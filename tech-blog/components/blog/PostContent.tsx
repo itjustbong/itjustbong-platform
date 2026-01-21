@@ -1,5 +1,6 @@
 import { compileMDXContent } from "@/lib/mdx";
 import { cn } from "@/lib/utils";
+import { mdxComponents } from "./MDXComponents";
 
 interface PostContentProps {
   content: string;
@@ -7,7 +8,7 @@ interface PostContentProps {
 }
 
 export async function PostContent({ content, className }: PostContentProps) {
-  const { content: mdxContent } = await compileMDXContent(content);
+  const { content: mdxContent } = await compileMDXContent(content, mdxComponents);
 
   return (
     <article
@@ -28,9 +29,9 @@ export async function PostContent({ content, className }: PostContentProps) {
         "prose-p:text-[15px] prose-p:leading-[1.8] prose-p:mb-5 prose-p:mt-0 md:prose-p:text-base",
         "prose-p:text-foreground/80",
         // Link style
-        "prose-a:text-primary prose-a:no-underline prose-a:font-medium",
-        "prose-a:underline-offset-4",
-        "hover:prose-a:underline",
+        "prose-a:text-primary prose-a:font-medium",
+        "prose-a:underline prose-a:decoration-primary/40 prose-a:underline-offset-4",
+        "hover:prose-a:decoration-primary",
         // List style
         "prose-ul:my-5 prose-ul:list-disc prose-ul:pl-5 prose-ul:space-y-1.5",
         "prose-ol:my-5 prose-ol:list-decimal prose-ol:pl-5 prose-ol:space-y-1.5",
