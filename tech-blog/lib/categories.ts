@@ -10,6 +10,7 @@ export const CATEGORY_LABEL_MAP: Record<string, string> = {
   mobile: "모바일",
   security: "보안",
   cloud: "클라우드",
+  architecture: "아키텍처",
 };
 
 /**
