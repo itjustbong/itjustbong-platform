@@ -200,7 +200,7 @@ export default async function PostPage({ params }: PostPageProps) {
       {/* Related Posts */}
       {filteredRelatedPosts.length > 0 && (
         <section className="border-t border-border/40 bg-muted/30">
-          <div className="mx-auto max-w-3xl px-6 py-10 md:py-12">
+          <div className="mx-auto max-w-7xl px-6 py-10 md:py-12">
             <div className="mb-6">
               <h2 className="text-xl font-semibold tracking-tight">관련 글</h2>
               <p className="mt-1 text-sm text-muted-foreground">
