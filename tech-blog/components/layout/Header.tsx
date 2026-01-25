@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ThemeToggle } from "./ThemeToggle";
 import { InfoPopup } from "./InfoPopup";
 
@@ -11,7 +12,13 @@ export function Header() {
           href="/"
           className="font-mono text-base transition-opacity hover:opacity-80"
         >
-          <span className="mr-1.5">🧑‍💻</span>
+          <Image
+            src="/icon/icon-192.png"
+            alt="logo"
+            width={20}
+            height={20}
+            className="mr-1.5 inline-block"
+          />
           <span className="text-primary">{"<"}</span>
           <span className="font-semibold">log</span>
           <span className="text-muted-foreground">.itjustbong</span>
