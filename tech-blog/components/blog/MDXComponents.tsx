@@ -2,6 +2,40 @@ import type { MDXComponents as MDXComponentsType } from "mdx/types";
 import { Mermaid } from "./Mermaid";
 import { Toc } from "./Toc";
 
+// Callout component for important notices
+type CalloutType = "info" | "warning" | "error" | "success" | "note" | "plain";
+
+interface CalloutProps {
+  type?: CalloutType;
+  children: React.ReactNode;
+}
+
+const calloutStyles: Record<CalloutType, { bg: string; icon: string }> = {
+  info: { bg: "bg-blue-50 dark:bg-blue-950/30", icon: "ℹ️" },
+  warning: { bg: "bg-yellow-50 dark:bg-yellow-950/30", icon: "⚠️" },
+  error: { bg: "bg-red-50 dark:bg-red-950/30", icon: "🚨" },
+  success: { bg: "bg-green-50 dark:bg-green-950/30", icon: "✅" },
+  note: { bg: "bg-gray-100 dark:bg-gray-800/50", icon: "📝" },
+  plain: { bg: "", icon: "💡" },
+};
+
+function Callout({ type = "info", children }: CalloutProps) {
+  const { bg, icon } = calloutStyles[type];
+  return (
+    <div className={`my-4 flex items-start gap-2 rounded-md px-4 py-3 text-sm text-foreground/80 ${bg}`}>
+      <span>{icon}</span>
+      <div className="[&>p]:m-0">{children}</div>
+    </div>
+  );
+}
+
+// Divider component
+function Divider() {
+  return (
+    <hr className="my-8 border-t border-border" />
+  );
+}
+
 // Helper function to check if code is a mermaid diagram
 function isMermaidDiagram(code: string): boolean {
   const trimmed = code.trim();
@@ -187,5 +221,8 @@ export const mdxComponents: MDXComponentsType = {
   ul: Ul,
   ol: Ol,
   li: Li,
+  hr: Divider,
   Toc,
+  Callout,
+  Divider,
 };
