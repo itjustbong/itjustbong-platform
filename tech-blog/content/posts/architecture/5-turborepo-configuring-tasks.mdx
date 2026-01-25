@@ -3,15 +3,15 @@ title: "[Turborepo] 5. 태스크 설정하기 (Configuring Tasks)"
 description: "Turborepo 태스크 설정 방법과 모범 사례"
 category: "architecture"
 tags: ["turborepo", "monorepo", "build", "optimization"]
-createdAt: "2026-01-15"
-updatedAt: "2026-01-15"
+createdAt: "2025-12-19"
+updatedAt: "2025-12-19"
 published: true
 ---
 
 
-# Turborepo 태스크 설정하기 (Configuring Tasks)
+## Turborepo 태스크 설정하기
 
-태스크(Task)는 Turborepo가 실행하는 스크립트입니다. `turbo.json`에서 태스크 간의 관계를 정의하면, Turborepo가 최적의 실행 순서와 병렬 처리를 자동으로 결정합니다.
+태스크(Task)는 Turborepo가 실행하는 스크립트입니다. `turbo.json`에서 태스크 간의 관계를 정의하면 Turborepo가 실행 순서와 병렬 처리를 자동으로 결정합니다.
 
 ## Turborepo의 병렬 처리 능력
 
@@ -1285,6 +1285,6 @@ Turborepo 태스크 설정의 핵심 개념:
    - `extends`: 루트 설정 상속
    - 패키지별 커스터마이징
 
-이러한 설정을 통해 Turborepo는 최적의 빌드 순서와 병렬 처리를 자동으로 결정하여 개발 생산성을 크게 향상시킵니다.
+이러한 설정을 통해 Turborepo는 빌드 순서와 병렬 처리를 자동으로 결정합니다.
 
-다음 글에서는 Turborepo의 캐싱 메커니즘과 원격 캐싱 설정에 대해 자세히 알아보겠습니다.
+다음 글에서는 Turborepo의 캐싱 메커니즘과 원격 캐싱 설정을 다룹니다.

@@ -3,14 +3,14 @@ title: "[Docker] Dockerfile 멀티스테이지 빌드와 레이어 캐싱 최적
 description: "Dockerfile 멀티스테이지 빌드의 원리와 레이어 캐싱을 활용한 빌드 시간 최적화 방법"
 category: "devops"
 tags: ["docker", "dockerfile", "multistage", "caching", "optimization"]
-createdAt: "2026-01-23"
-updatedAt: "2026-01-23"
+createdAt: "2026-01-02"
+updatedAt: "2026-01-02"
 published: true
 ---
 
-# Dockerfile 멀티스테이지 빌드와 레이어 캐싱 최적화
+## Dockerfile 멀티스테이지 빌드와 레이어 캐싱 최적화
 
-Dockerfile을 작성할 때 가장 중요한 두 가지가 있습니다. 바로 **멀티스테이지 빌드**와 **레이어 캐싱**입니다. 이 두 가지를 잘 활용하면 이미지 크기는 1/4로 줄이고, 빌드 시간은 5배 단축할 수 있습니다.
+Dockerfile을 작성할 때 가장 중요한 두 가지가 있습니다. 멀티스테이지 빌드와 레이어 캐싱입니다. 이 두 가지를 잘 활용하면 이미지 크기는 1/4로 줄이고, 빌드 시간은 5배 단축할 수 있습니다.
 
 ---
 
@@ -473,12 +473,6 @@ CMD ["node", "apps/backend/dist/main.js"]
 
 ## 마치며
 
-Dockerfile 최적화의 핵심을 정리하면:
+Dockerfile 최적화의 핵심은 멀티스테이지 빌드로 Builder와 Runner를 분리하여 이미지 크기를 최소화하고, 변경이 적은 파일을 먼저 복사하여 레이어 캐싱을 활용하는 것입니다. 보안을 위해 non-root 사용자를 사용하고, 환경변수는 런타임에 주입합니다.
 
-1. **멀티스테이지 빌드**: Builder와 Runner를 분리하여 이미지 크기 최소화
-2. **레이어 캐싱**: 변경이 적은 파일을 먼저 복사하여 빌드 시간 단축
-3. **보안**: non-root 사용자 사용, 환경변수는 런타임에 주입
-
-이 세 가지만 지키면 프로덕션에서도 안심하고 사용할 수 있는 Dockerfile을 만들 수 있습니다.
-
-다음 글에서는 Prisma와 Docker를 함께 사용할 때 자주 만나는 바이너리 타겟 문제에 대해 다뤄보겠습니다!
+다음 글에서는 Prisma와 Docker를 함께 사용할 때 자주 만나는 바이너리 타겟 문제를 다룹니다.

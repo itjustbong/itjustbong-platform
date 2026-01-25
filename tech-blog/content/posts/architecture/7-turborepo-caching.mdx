@@ -3,17 +3,17 @@ title: "[Turborepo] 7. 캐싱 (Caching)"
 description: "Turborepo 캐싱 기능과 모범 사례"
 category: "architecture"
 tags: ["turborepo", "monorepo", "build", "optimization"]
-createdAt: "2026-01-15"
-updatedAt: "2026-01-15"
+createdAt: "2025-12-21"
+updatedAt: "2025-12-21"
 published: true
 ---
 
 
-# Turborepo 캐싱 (Caching)
+## Turborepo 캐싱
 
-Turborepo의 가장 강력한 기능은 **같은 일을 절대 두 번 하지 않는다**는 것입니다. 캐싱 가능한 작업이라면 캐싱된 데이터의 fingerprint와 비교하여 작업을 복원합니다.
+Turborepo의 핵심 기능은 같은 일을 두 번 하지 않는다는 것입니다. 캐싱 가능한 작업이라면 캐시된 데이터의 fingerprint와 비교하여 작업을 복원합니다.
 
-Remote Caching을 활성화하면 전체 팀과 CI 간에 캐시를 공유하여 더욱 강력해집니다.
+Remote Caching을 활성화하면 전체 팀과 CI 간에 캐시를 공유할 수 있습니다.
 
 ## 캐싱의 기본 원리
 
@@ -1109,23 +1109,6 @@ $ turbo build
 
 ## 정리
 
-Turborepo 캐싱의 핵심:
+캐싱의 핵심은 결정론적 작업(동일한 입력 → 동일한 출력)에 대해 해시 기반으로 캐시를 관리하는 것입니다. `outputs`를 정확히 지정하고, `globalDependencies`와 환경 변수를 명시하며, 비결정론적 작업은 `cache: false`로 설정합니다. Remote Caching을 활성화하면 팀 전체와 CI가 캐시를 공유할 수 있습니다.
 
-1. **결정론적 작업**: 동일한 입력 → 동일한 출력
-2. **해시 기반**: 글로벌 해시 + 패키지 해시
-3. **자동 복원**: 파일 + 로그
-4. **Remote Caching**: 팀 전체 공유
-5. **선택적 비활성화**: 비결정론적 작업
-
-**캐싱 체크리스트:**
-
-- [ ] `outputs` 정확히 지정
-- [ ] `globalDependencies` 설정
-- [ ] 환경 변수 명시 (`env`, `globalEnv`)
-- [ ] 비결정론적 작업은 `cache: false`
-- [ ] Remote Caching 활성화
-- [ ] `.gitignore`에 `.turbo/` 추가
-
-Turborepo의 강력한 캐싱 기능을 활용하면 개발 속도를 획기적으로 향상시킬 수 있습니다. 특히 Remote Caching을 통해 팀 전체와 CI가 캐시를 공유하면 더욱 강력해집니다.
-
-다음 글에서는 Turborepo의 고급 기능과 최적화 기법에 대해 알아보겠습니다.
+다음 글에서는 Turborepo의 고급 기능과 최적화 기법을 다룹니다.

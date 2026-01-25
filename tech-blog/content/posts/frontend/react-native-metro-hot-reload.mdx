@@ -3,14 +3,14 @@ title: "[React Native] Metro 서버와 Hot Reload 원리"
 description: "React Native의 핵심 번들러 Metro 서버의 역할과 Hot Reload가 작동하는 원리"
 category: "frontend"
 tags: ["react native", "expo", "metro", "hot reload"]
-createdAt: "2026-01-15"
-updatedAt: "2026-01-15"
+createdAt: "2026-01-19"
+updatedAt: "2026-01-19"
 published: true
 ---
 
-# Metro 서버와 Hot Reload 원리
+## Metro 서버와 Hot Reload 원리
 
-React Native 개발에서 빠른 개발 경험을 제공하는 핵심은 Metro 서버와 Hot Reload입니다. 이 문서에서는 Metro 서버의 역할과 Hot Reload가 어떻게 작동하는지 자세히 설명합니다.
+Metro 서버의 역할과 Hot Reload가 어떻게 작동하는지 정리합니다.
 
 <Toc>
 1. [Metro 서버란?](#metro-서버란)
@@ -314,10 +314,4 @@ flowchart TB
 
 ## 마무리
 
-Metro 서버와 Hot Reload는 React Native 개발의 핵심입니다:
-
-- **Metro 서버**: JavaScript 번들러 + 실시간 코드 전송
-- **Hot Reload**: JS 코드만 교체하여 빠른 개발 가능
-- **Development Build**: 네이티브는 한 번 빌드, JS는 무한 수정
-
-이 개념을 이해하면 왜 개발이 빠른지, 왜 배포 시에는 빌드가 필요한지 명확히 알 수 있습니다! 🚀
+Metro 서버는 JavaScript 번들러이자 실시간 코드 전송 역할을 합니다. 개발 중에는 Metro가 변경된 JS를 앱에 전송하고, 배포 빌드에서는 JS 번들이 앱에 내장되어 Metro 없이 독립 실행됩니다.

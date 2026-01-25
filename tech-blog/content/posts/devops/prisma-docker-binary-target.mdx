@@ -3,12 +3,12 @@ title: "[Docker] Prisma와 Docker: 바이너리 타겟의 이해"
 description: "Docker에서 Prisma 사용 시 발생하는 바이너리 타겟 문제와 해결 방법"
 category: "devops"
 tags: ["docker", "prisma", "binary", "alpine", "troubleshooting"]
-createdAt: "2026-01-23"
-updatedAt: "2026-01-23"
+createdAt: "2026-01-08"
+updatedAt: "2026-01-08"
 published: true
 ---
 
-# Prisma와 Docker: 바이너리 타겟의 이해
+## Prisma와 Docker: 바이너리 타겟의 이해
 
 Docker 환경에서 Prisma를 사용하다 보면 이런 에러를 만날 수 있습니다:
 
@@ -17,7 +17,7 @@ Error: Query engine binary for current platform "linux-musl-openssl-3.0.x"
 could not be found.
 ```
 
-이 에러가 왜 발생하는지, 그리고 어떻게 해결하는지 알아보겠습니다.
+이 에러가 왜 발생하는지, 그리고 어떻게 해결하는지 정리합니다.
 
 ---
 
@@ -412,12 +412,8 @@ RUN npx prisma generate
 
 ## 마치며
 
-Prisma와 Docker를 함께 사용할 때 발생하는 바이너리 타겟 문제는:
+Prisma와 Docker를 함께 사용할 때 발생하는 바이너리 타겟 문제는 OS, C 라이브러리(glibc/musl), OpenSSL 버전에 따라 다른 바이너리가 필요하기 때문입니다. `binaryTargets`에 Docker 환경에 맞는 타겟을 명시하고, `prisma generate`를 Docker 빌드 시 실행하면 해결됩니다.
 
-1. **원인**: OS, C 라이브러리(glibc/musl), OpenSSL 버전에 따라 다른 바이너리가 필요
-2. **해결**: `binaryTargets`에 Docker 환경에 맞는 타겟 명시
-3. **주의**: `prisma generate`를 Docker 빌드 시 실행
+Alpine 이미지를 사용한다면 `linux-musl-openssl-3.0.x`를, 일반 Debian 기반 이미지를 사용한다면 `debian-openssl-3.0.x`를 사용합니다.
 
-Alpine 이미지를 사용한다면 `linux-musl-openssl-3.0.x`를, 일반 Debian 기반 이미지를 사용한다면 `debian-openssl-3.0.x`를 사용하면 됩니다.
-
-다음 글에서는 백엔드 아키텍처의 기본 패턴인 DTO, DAO, Entity에 대해 다뤄보겠습니다!
+다음 글에서는 백엔드 아키텍처의 기본 패턴인 DTO, DAO, Entity를 다룹니다.

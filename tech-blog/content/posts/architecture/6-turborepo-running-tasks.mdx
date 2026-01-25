@@ -3,16 +3,16 @@ title: "[Turborepo] 6. 태스크 실행하기 (Running Tasks)"
 description: "Turborepo 태스크 실행 방법과 필터링 기법"
 category: "architecture"
 tags: ["turborepo", "monorepo", "build", "optimization"]
-createdAt: "2026-01-15"
-updatedAt: "2026-01-15"
+createdAt: "2025-12-20"
+updatedAt: "2025-12-20"
 published: true
 ---
 
-# Turborepo 태스크 실행하기 (Running Tasks)
+## Turborepo 태스크 실행하기
 
 Turborepo는 기본적으로 태스크를 병렬로 수행하고 캐싱합니다. 소스 코드 기반 해싱을 통해 CI 파이프라인과 개발 과정에서 워크플로우를 빠르게 재생할 수 있습니다.
 
-이 글에서는 Turborepo로 태스크를 실행하는 다양한 방법과 필터링 기법을 알아보겠습니다.
+태스크를 실행하는 다양한 방법과 필터링 기법을 정리합니다.
 
 ## 태스크 실행 방법
 
@@ -862,36 +862,6 @@ turbo build
 
 ## 정리
 
-Turborepo 태스크 실행의 핵심:
+태스크 실행의 핵심은 `turbo run <task>`로 모든 패키지에서 실행하고, `--filter`로 범위를 제한하는 것입니다. 패키지, 디렉토리, Git 변경사항을 기준으로 필터링할 수 있고, `...`와 `^` 문법으로 의존성 관계를 포함할 수 있습니다. `--force`, `--dry`, `--concurrency` 등의 플래그로 실행 동작을 조정합니다.
 
-1. **기본 실행**
-   - `turbo run <task>`: 모든 패키지에서 실행
-   - 병렬 처리 자동화
-   - 의존성 순서 자동 보장
-
-2. **필터링**
-   - 패키지: `--filter=<package>`
-   - 디렉토리: `--filter={<glob>}`
-   - Git 변경: `--filter=[<range>]`
-   - 의존성: `...`, `^` 문법
-
-3. **커스터마이징**
-   - `--force`: 캐시 무시
-   - `--dry`: 드라이런
-   - `--concurrency`: 병렬 제어
-   - `--output-logs`: 로그 제어
-
-4. **실전 활용**
-   - 로컬 개발: 자동 스코핑 활용
-   - CI/CD: Git 필터로 최적화
-   - 디버깅: `--dry`, `--graph` 활용
-   - 성능: `--concurrency` 조정
-
-5. **필터 조합**
-   - 여러 필터를 결합하여 정밀한 제어
-   - AND 조건으로 동작
-   - 복잡한 시나리오에 유용
-
-Turborepo의 강력한 필터링과 병렬 처리 기능을 활용하면 모노레포에서도 빠르고 효율적인 개발이 가능합니다.
-
-다음 글에서는 Turborepo의 캐싱 메커니즘과 원격 캐싱 설정에 대해 자세히 알아보겠습니다.
+다음 글에서는 Turborepo의 캐싱 메커니즘과 원격 캐싱 설정을 다룹니다.

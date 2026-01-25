@@ -3,14 +3,14 @@ title: "[React Native] 커스텀 네이티브 모듈 만들기"
 description: "React Native에서 직접 네이티브 모듈을 만들어 JS와 통신하는 방법"
 category: "frontend"
 tags: ["react native", "expo", "native modules", "swift", "kotlin"]
-createdAt: "2026-01-15"
-updatedAt: "2026-01-15"
+createdAt: "2026-01-22"
+updatedAt: "2026-01-22"
 published: true
 ---
 
-# 커스텀 네이티브 모듈 만들기
+## 커스텀 네이티브 모듈 만들기
 
-React Native에서 제공하는 기본 모듈 외에도, 직접 네이티브 모듈을 만들어 JS 코드와 통신할 수 있습니다. 이 문서에서는 Expo Modules API를 활용한 커스텀 네이티브 모듈 개발 방법을 알아봅니다.
+Expo Modules API를 활용해 직접 네이티브 모듈을 만들고 JS 코드와 통신하는 방법을 정리합니다.
 
 <Toc>
 1. [사용자도 Bridge를 통해 JS ↔ Native 통신 가능!](#사용자도-bridge를-통해-js--native-통신-가능)
@@ -314,10 +314,4 @@ console.log(VERSION, PLATFORM); // "1.0.0", "iOS"
 
 ## 마무리
 
-커스텀 네이티브 모듈을 만들면:
-
-- **특수 하드웨어 연동**: 블루투스, IoT 등
-- **기존 SDK 활용**: 결제, 광고 SDK
-- **성능 최적화**: 고성능 작업을 네이티브에서 처리
-
-Expo Modules API를 사용하면 Swift/Kotlin으로 쉽게 네이티브 모듈을 만들 수 있습니다! 🚀
+Expo Modules API를 사용하면 Swift/Kotlin으로 네이티브 모듈을 만들 수 있습니다. 특수 하드웨어 연동, 기존 SDK 활용, 고성능 작업 처리가 필요할 때 유용합니다.

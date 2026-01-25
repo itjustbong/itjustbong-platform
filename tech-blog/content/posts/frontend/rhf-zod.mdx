@@ -3,14 +3,14 @@ title: "[React] React Hook Form 과 Zod 를 활용한 Form 관리"
 description: "From 관리의 성능 최적화 with 타입 검증"
 category: "frontend"
 tags: ["react", "react hook form","zod"]
-createdAt: "2026-01-15"
-updatedAt: "2026-01-15"
+createdAt: "2026-01-24"
+updatedAt: "2026-01-24"
 published: true
 ---
 
-# React Hook Form + Zod로 폼 최적화하기
+## React Hook Form + Zod로 폼 최적화하기
 
-폼 구현은 웹 개발에서 가장 흔하면서도 까다로운 작업입니다. 입력 검증, 에러 처리, 상태 관리까지 신경 써야 할 게 많죠. 이번 글에서는 React Hook Form과 Zod를 활용해 타입 안전하고 성능 좋은 폼을 만드는 방법을 소개합니다.
+React Hook Form과 Zod를 활용해 타입 안전하고 성능 좋은 폼을 만드는 방법을 정리합니다.
 
 ## 기존 방식의 문제점
 
@@ -70,8 +70,6 @@ function LoginForm() {
 - 반복적인 보일러플레이트 코드
 
 ## React Hook Form + Zod 조합
-
-이제 개선된 방식을 살펴보겠습니다.
 
 ### 1. Zod로 스키마 정의
 
@@ -310,11 +308,4 @@ export const SignUpView = () => {
 
 ## 정리
 
-React Hook Form + Zod 조합은:
-
-- **성능**: 타이핑 중 리렌더링 없음
-- **타입 안정성**: 서버-클라이언트 타입 자동 동기화
-- **개발 경험**: 보일러플레이트 90% 감소
-- **유지보수성**: 검증 로직 한 곳에서 관리
-
-폼 구현이 복잡하다고 느껴졌다면, 이 조합을 시도해보세요. 코드는 줄어들고 성능은 좋아집니다.
+React Hook Form은 uncontrolled 방식으로 타이핑 중 리렌더링을 방지하고, Zod는 스키마 기반으로 검증과 타입을 한 번에 처리합니다. 두 라이브러리를 조합하면 보일러플레이트가 줄고 타입 안정성이 높아집니다.

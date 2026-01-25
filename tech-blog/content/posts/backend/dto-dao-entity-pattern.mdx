@@ -3,12 +3,12 @@ title: "[Backend] DTO, DAO, Entity 패턴 이해하기"
 description: "백엔드 아키텍처의 핵심 패턴인 DTO, DAO, Entity의 개념과 실무 적용 방법"
 category: "backend"
 tags: ["backend", "architecture", "dto", "dao", "entity", "nestjs"]
-createdAt: "2026-01-23"
-updatedAt: "2026-01-23"
+createdAt: "2025-12-26"
+updatedAt: "2025-12-26"
 published: true
 ---
 
-# DTO, DAO, Entity 패턴 이해하기
+## DTO, DAO, Entity 패턴 이해하기
 
 백엔드 개발을 하다 보면 DTO, DAO, Entity, VO, BO 같은 용어들을 자주 접하게 됩니다. 처음엔 비슷해 보여서 혼란스러운데, 각각의 역할을 명확히 이해하면 코드 구조가 훨씬 깔끔해집니다.
 
@@ -495,20 +495,4 @@ sequenceDiagram
 
 ## 마치며
 
-각 패턴의 역할을 정리하면:
-
-1. **DTO**: 데이터 전송용 객체 (로직 없음)
-2. **DAO/Repository**: DB 접근 캡슐화 (Prisma가 대체)
-3. **Entity**: DB 테이블 매핑 (ID로 식별)
-4. **VO**: 값 객체 (불변, 값으로 비교)
-5. **BO**: 비즈니스 로직 포함
-
-NestJS + Prisma 조합에서는:
-- **Request DTO**: class + 데코레이터 (유효성 검사)
-- **Response DTO**: interface (프론트와 공유 가능)
-- **Entity**: Prisma가 자동 생성
-- **DAO**: Prisma Client가 담당
-
-이 패턴들을 잘 활용하면 레이어 간 책임이 명확해지고, 테스트하기 쉬운 코드를 작성할 수 있습니다!
-
-다음 글에서는 모노레포에서 타입을 공유하는 방법에 대해 다뤄보겠습니다.
+DTO는 데이터 전송용, DAO/Repository는 DB 접근 캡슐화, Entity는 DB 테이블 매핑, VO는 불변 값 객체, BO는 비즈니스 로직을 담당합니다. NestJS + Prisma 조합에서는 Request DTO에 class와 데코레이터를, Response DTO에 interface를 사용하고, Entity와 DAO는 Prisma가 담당합니다.
