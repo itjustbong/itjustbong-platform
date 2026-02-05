@@ -6,20 +6,42 @@ import { experiences } from "@/lib/resume-data";
 import { HighlightText } from "@/lib/highlight-text";
 import { Building2, ChevronRight } from "lucide-react";
 
+// 대학 졸업 구분선 컴포넌트
+function GraduationDivider() {
+  return (
+    <div className="flex items-center gap-3 mb-2">
+      <div className="flex-1 h-px bg-border" />
+      <span className="text-xs text-muted-foreground whitespace-nowrap">
+        대학 졸업
+      </span>
+      <div className="flex-1 h-px bg-border" />
+    </div>
+  );
+}
+
 export function ExperienceSection() {
+  // "대학 재학 중"이 포함된 첫 번째 경험의 인덱스 찾기
+  const firstUndergraduateIndex = experiences.findIndex((exp) =>
+    exp.period.includes("대학 재학 중")
+  );
+
   return (
     <section className="mb-12" id="experience">
       <SectionHeader title="Experience" />
       <div className="space-y-8">
         {experiences.map((exp, index) => (
-          <motion.div
-            key={exp.company}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: index * 0.1 }}
-            className="relative pl-6 border-l-2 border-border hover:border-accent/50 transition-colors"
-          >
+          <div key={exp.company}>
+            {/* 졸업 후 경험과 재학 중 경험 사이에 구분선 표시 */}
+            {index === firstUndergraduateIndex && firstUndergraduateIndex > 0 && (
+              <GraduationDivider />
+            )}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: index * 0.1 }}
+              className="relative pl-6 border-l-2 border-border hover:border-accent/50 transition-colors"
+            >
             <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-accent border-2 border-background" />
             
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mb-4">
@@ -73,6 +95,7 @@ export function ExperienceSection() {
               </div>
             )}
           </motion.div>
+          </div>
         ))}
       </div>
     </section>
