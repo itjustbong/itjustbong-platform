@@ -33,7 +33,12 @@ function readKnowledgeSources(
     return [];
   }
 
-  const content = fs.readFileSync(configPath, "utf-8");
+  const content = fs.readFileSync(configPath, "utf-8").trim();
+
+  if (!content) {
+    return [];
+  }
+
   const parsed = JSON.parse(content) as {
     sources: Array<{
       url: string;

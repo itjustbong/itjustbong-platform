@@ -81,22 +81,30 @@ const CONFIG_PATH = path.join(
   "knowledge.json"
 );
 
-let originalConfigContent: string;
+const VALID_CONFIG_CONTENT = JSON.stringify({
+  sources: [
+    {
+      url: "https://blog.itjustbong.me/posts/tech-blog-without-database",
+      title: "데이터베이스 없이 기술 블로그 만들기",
+      category: "blog",
+    },
+    {
+      url: "https://blog.itjustbong.me/posts/monorepo-shared-types",
+      title: "모노레포에서 공유 타입 관리하기",
+      category: "blog",
+    },
+  ],
+}, null, 2) + "\n";
 
 beforeEach(() => {
-  originalConfigContent = fs.readFileSync(
-    CONFIG_PATH,
-    "utf-8"
-  );
+  // 매 테스트 전에 knowledge.json을 올바른 상태로 복원
+  fs.writeFileSync(CONFIG_PATH, VALID_CONFIG_CONTENT, "utf-8");
   mockRunIndexingPipeline.mockReset();
 });
 
 afterEach(() => {
-  fs.writeFileSync(
-    CONFIG_PATH,
-    originalConfigContent,
-    "utf-8"
-  );
+  // 테스트 후에도 올바른 상태로 복원
+  fs.writeFileSync(CONFIG_PATH, VALID_CONFIG_CONTENT, "utf-8");
 });
 
 // ============================================================

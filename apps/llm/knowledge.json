@@ -6,9 +6,9 @@
       "category": "blog"
     },
     {
-      "url": "https://resume.itjustbong.me",
-      "title": "이력서",
-      "category": "resume"
+      "url": "https://blog.itjustbong.me/posts/monorepo-shared-types",
+      "title": "모노레포에서 공유 타입 관리하기",
+      "category": "blog"
     }
   ]
 }

@@ -269,9 +269,25 @@ describe("Knowledge Config 로더", () => {
     });
 
     it("샘플 knowledge.json 파일을 로드할 수 있다", () => {
-      const samplePath = path.resolve(
-        __dirname,
-        "../../knowledge.json"
+      // 병렬 테스트 간 간섭을 방지하기 위해 임시 파일 사용
+      const samplePath = path.join(tmpDir, "sample-knowledge.json");
+      fs.writeFileSync(
+        samplePath,
+        JSON.stringify({
+          sources: [
+            {
+              url: "https://blog.itjustbong.me/posts/tech-blog-without-database",
+              title: "데이터베이스 없이 기술 블로그 만들기",
+              category: "blog",
+            },
+            {
+              url: "https://blog.itjustbong.me/posts/monorepo-shared-types",
+              title: "모노레포에서 공유 타입 관리하기",
+              category: "blog",
+            },
+          ],
+        }, null, 2),
+        "utf-8"
       );
       const config = loadKnowledgeConfig(samplePath);
       expect(config.sources.length).toBeGreaterThanOrEqual(1);
