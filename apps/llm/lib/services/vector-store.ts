@@ -353,7 +353,7 @@ class VectorStore {
       if (!result.next_page_offset) {
         break;
       }
-      offset = result.next_page_offset;
+      offset = result.next_page_offset as string | number | undefined;
     }
 
     // 각 소스의 인덱싱 상태를 확인한다
