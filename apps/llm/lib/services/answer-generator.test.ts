@@ -109,7 +109,7 @@ describe("formatContext", () => {
 
     const formatted = formatContext(results);
 
-    expect(formatted).toContain("[참조 1]");
+    expect(formatted).toContain("[문서 1]");
     expect(formatted).toContain("제목: 첫 번째 포스트");
     expect(formatted).toContain(
       "URL: https://blog.example.com/1"
@@ -117,7 +117,7 @@ describe("formatContext", () => {
     expect(formatted).toContain("카테고리: blog");
     expect(formatted).toContain("첫 번째 내용");
 
-    expect(formatted).toContain("[참조 2]");
+    expect(formatted).toContain("[문서 2]");
     expect(formatted).toContain("제목: 두 번째 포스트");
     expect(formatted).toContain(
       "URL: https://blog.example.com/2"
@@ -135,8 +135,8 @@ describe("formatContext", () => {
     const results = [createSearchResult()];
     const formatted = formatContext(results);
 
-    expect(formatted).toContain("[참조 1]");
-    expect(formatted).not.toContain("[참조 2]");
+    expect(formatted).toContain("[문서 1]");
+    expect(formatted).not.toContain("[문서 2]");
     expect(formatted).not.toContain("---");
   });
 
