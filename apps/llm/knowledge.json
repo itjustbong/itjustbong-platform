@@ -1,8 +1,8 @@
 {
   "sources": [
     {
-      "url": "https://blog.itjustbong.me/posts/tech-blog-without-database",
-      "title": "데이터베이스 없이 기술 블로그 만들기",
+      "url": "https://log.itjustbong.com/posts/tech-blog-without-database",
+      "title": "DB 없이 운영하는 테크 블로그 개발기",
       "category": "blog"
     },
     {
