@@ -138,10 +138,13 @@ async function collectFromUrl(url: string): Promise<CollectedContent> {
   try {
     response = await fetch(url, {
       headers: {
-        "User-Agent": "KnowledgeCollector/1.0",
-        Accept: "text/html,application/xhtml+xml",
+        "User-Agent":
+          "Mozilla/5.0 (compatible; KnowledgeCollector/1.0)",
+        Accept:
+          "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
       },
       signal: AbortSignal.timeout(30_000),
+      cache: "no-store",
     });
   } catch (error: unknown) {
     const message =
@@ -153,7 +156,7 @@ async function collectFromUrl(url: string): Promise<CollectedContent> {
 
   if (!response.ok) {
     throw new Error(
-      `URL에 접속할 수 없습니다: ${url} (HTTP ${response.status})`
+      `HTTP ${response.status} ${response.statusText}: ${url}`
     );
   }
 
