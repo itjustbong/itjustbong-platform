@@ -8,7 +8,7 @@ import type { VectorPoint, SearchResult } from "../types";
 
 const DENSE_VECTOR_NAME = "dense_vector";
 const SPARSE_VECTOR_NAME = "bm25_sparse_vector";
-const DENSE_VECTOR_SIZE = 768;
+const DENSE_VECTOR_SIZE = 3072;
 
 // ============================================================
 // 환경 변수 헬퍼
