@@ -1,0 +1,24 @@
+services:
+  qdrant:
+    image: qdrant/qdrant:latest
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    restart: unless-stopped
+
+  llm-app:
+    build:
+      context: .
+      dockerfile: apps/llm/Dockerfile
+    ports:
+      - "3002:3000"
+    env_file:
+      - apps/llm/.env
+    depends_on:
+      - qdrant
+    restart: unless-stopped
+
+volumes:
+  qdrant_data:
