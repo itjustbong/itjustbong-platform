@@ -1,4 +1,5 @@
 import { QdrantClient } from "@qdrant/js-client-rest";
+import { randomUUID } from "crypto";
 
 import type { VectorPoint, SearchResult } from "../types";
 
@@ -9,6 +10,7 @@ import type { VectorPoint, SearchResult } from "../types";
 const DENSE_VECTOR_NAME = "dense_vector";
 const SPARSE_VECTOR_NAME = "bm25_sparse_vector";
 const DENSE_VECTOR_SIZE = 3072;
+const SOURCES_COLLECTION_SUFFIX = "_sources";
 
 // ============================================================
 // 환경 변수 헬퍼
@@ -241,6 +243,210 @@ class VectorStore {
   getCollectionName(): string {
     return this.collectionName;
   }
+
+  // ============================================================
+  // 소스 메타데이터 관리 (knowledge_sources 컬렉션)
+  // ============================================================
+
+  /** 소스 메타데이터 컬렉션 이름을 반환한다 */
+  private getSourcesCollectionName(): string {
+    return this.collectionName + SOURCES_COLLECTION_SUFFIX;
+  }
+
+  /**
+   * 소스 메타데이터 컬렉션이 존재하지 않으면 생성한다.
+   * 벡터 없이 payload만 저장하는 컬렉션이다.
+   */
+  async ensureSourcesCollection(): Promise<void> {
+    const name = this.getSourcesCollectionName();
+    const exists = await this.client.collectionExists(name);
+
+    if (exists.exists) {
+      return;
+    }
+
+    await this.client.createCollection(name, {
+      vectors: {
+        // Qdrant는 벡터가 필수이므로 더미 1차원 벡터를 사용한다
+        dummy: { size: 1, distance: "Cosine" },
+      },
+    });
+
+    await this.client.createPayloadIndex(name, {
+      field_name: "url",
+      field_schema: "keyword",
+      wait: true,
+    });
+  }
+
+  /**
+   * 소스 메타데이터를 추가한다.
+   */
+  async addSource(source: {
+    url: string;
+    title: string;
+    category: string;
+    type: "url" | "text";
+    content?: string;
+  }): Promise<string> {
+    const name = this.getSourcesCollectionName();
+    const id = randomUUID();
+
+    await this.client.upsert(name, {
+      wait: true,
+      points: [
+        {
+          id,
+          vector: { dummy: [0] },
+          payload: {
+            url: source.url,
+            title: source.title,
+            category: source.category,
+            type: source.type,
+            content: source.content ?? null,
+            createdAt: new Date().toISOString(),
+          },
+        },
+      ],
+    });
+
+    return id;
+  }
+
+  /**
+   * 등록된 모든 소스 메타데이터를 조회한다.
+   */
+  async getAllSources(): Promise<
+    Array<{
+      id: string;
+      url: string;
+      title: string;
+      category: string;
+      type: "url" | "text";
+      content?: string;
+      indexingStatus: "indexed" | "not_indexed";
+    }>
+  > {
+    const name = this.getSourcesCollectionName();
+    const allPoints: Array<{
+      id: string | number;
+      payload: Record<string, unknown>;
+    }> = [];
+
+    let offset: string | number | undefined;
+
+    // scroll로 전체 포인트를 가져온다
+    while (true) {
+      const result = await this.client.scroll(name, {
+        limit: 100,
+        with_payload: true,
+        offset,
+      });
+
+      allPoints.push(
+        ...result.points.map((p) => ({
+          id: p.id,
+          payload: p.payload as Record<string, unknown>,
+        }))
+      );
+
+      if (!result.next_page_offset) {
+        break;
+      }
+      offset = result.next_page_offset;
+    }
+
+    // 각 소스의 인덱싱 상태를 확인한다
+    const sources = await Promise.all(
+      allPoints.map(async (point) => {
+        const url = String(point.payload.url ?? "");
+        let indexingStatus: "indexed" | "not_indexed" =
+          "not_indexed";
+
+        try {
+          const hash = await this.getContentHashByUrl(url);
+          if (hash) {
+            indexingStatus = "indexed";
+          }
+        } catch {
+          // 에러 시 not_indexed로 처리
+        }
+
+        return {
+          id: String(point.id),
+          url,
+          title: String(point.payload.title ?? ""),
+          category: String(point.payload.category ?? ""),
+          type: (point.payload.type as "url" | "text") ?? "url",
+          content: point.payload.content
+            ? String(point.payload.content)
+            : undefined,
+          indexingStatus,
+        };
+      })
+    );
+
+    return sources;
+  }
+
+  /**
+   * URL로 소스 메타데이터를 조회한다.
+   */
+  async getSourceByUrl(
+    url: string
+  ): Promise<{
+    id: string;
+    url: string;
+    title: string;
+    category: string;
+    type: "url" | "text";
+    content?: string;
+  } | null> {
+    const name = this.getSourcesCollectionName();
+    const result = await this.client.scroll(name, {
+      filter: {
+        must: [{ key: "url", match: { value: url } }],
+      },
+      limit: 1,
+      with_payload: true,
+    });
+
+    if (result.points.length === 0) {
+      return null;
+    }
+
+    const point = result.points[0];
+    const payload = point.payload as Record<string, unknown>;
+
+    return {
+      id: String(point.id),
+      url: String(payload.url ?? ""),
+      title: String(payload.title ?? ""),
+      category: String(payload.category ?? ""),
+      type: (payload.type as "url" | "text") ?? "url",
+      content: payload.content
+        ? String(payload.content)
+        : undefined,
+    };
+  }
+
+  /**
+   * 소스 메타데이터를 삭제한다.
+   * 관련 청크 벡터도 함께 삭제한다.
+   */
+  async deleteSource(url: string): Promise<void> {
+    // 1. 소스 메타데이터 삭제
+    const name = this.getSourcesCollectionName();
+    await this.client.delete(name, {
+      wait: true,
+      filter: {
+        must: [{ key: "url", match: { value: url } }],
+      },
+    });
+
+    // 2. 관련 청크 벡터 삭제
+    await this.deleteBySourceUrl(url);
+  }
 }
 
 export {
@@ -248,6 +454,7 @@ export {
   DENSE_VECTOR_NAME,
   SPARSE_VECTOR_NAME,
   DENSE_VECTOR_SIZE,
+  SOURCES_COLLECTION_SUFFIX,
   getQdrantUrl,
   getCollectionName,
 };

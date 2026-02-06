@@ -1,62 +1,12 @@
 import { type NextRequest, NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
 
 import {
   isValidSession,
   SESSION_COOKIE_NAME,
 } from "../admin/auth/route";
 import { runIndexingPipeline } from "../../../lib/services/indexer";
+import { VectorStore } from "../../../lib/services/vector-store";
 import type { KnowledgeSource } from "../../../lib/types";
-
-// ============================================================
-// 상수
-// ============================================================
-
-/** knowledge.json 파일 경로 */
-const KNOWLEDGE_CONFIG_PATH = path.join(
-  process.cwd(),
-  "knowledge.json"
-);
-
-// ============================================================
-// 헬퍼 함수
-// ============================================================
-
-/**
- * knowledge.json 파일에서 소스 목록을 읽는다.
- */
-function readKnowledgeSources(
-  configPath: string = KNOWLEDGE_CONFIG_PATH
-): KnowledgeSource[] {
-  if (!fs.existsSync(configPath)) {
-    return [];
-  }
-
-  const content = fs.readFileSync(configPath, "utf-8").trim();
-
-  if (!content) {
-    return [];
-  }
-
-  const parsed = JSON.parse(content) as {
-    sources: Array<{
-      url: string;
-      title: string;
-      category: string;
-      type?: "url" | "text";
-      content?: string;
-    }>;
-  };
-
-  return (parsed.sources ?? []).map((source) => ({
-    url: source.url,
-    title: source.title,
-    category: source.category,
-    type: source.type ?? "url",
-    content: source.content,
-  }));
-}
 
 // ============================================================
 // API 라우트 핸들러
@@ -66,6 +16,7 @@ function readKnowledgeSources(
  * POST /api/index
  *
  * 관리자 인증을 확인한 후 인덱싱 파이프라인을 실행한다.
+ * Qdrant의 소스 메타데이터 컬렉션에서 소스 목록을 읽는다.
  *
  * 요청 본문 (선택):
  * - url?: string — 특정 소스만 인덱싱할 URL
@@ -111,14 +62,27 @@ export async function POST(
       // 본문이 없는 경우 전체 인덱싱
     }
 
-    // 3. knowledge.json에서 소스 목록 읽기
-    const allSources = readKnowledgeSources();
+    // 3. Qdrant에서 소스 목록 읽기
+    const vectorStore = new VectorStore();
+    await vectorStore.ensureSourcesCollection();
+
+    const allSources = await vectorStore.getAllSources();
+
+    // KnowledgeSource 형식으로 변환
+    const knowledgeSources: KnowledgeSource[] =
+      allSources.map((s) => ({
+        url: s.url,
+        title: s.title,
+        category: s.category,
+        type: s.type,
+        content: s.content,
+      }));
 
     // 4. 대상 소스 결정
     let sources: KnowledgeSource[];
 
     if (targetUrl) {
-      const found = allSources.find(
+      const found = knowledgeSources.find(
         (s) => s.url === targetUrl
       );
       if (!found) {
@@ -132,7 +96,7 @@ export async function POST(
       }
       sources = [found];
     } else {
-      sources = allSources;
+      sources = knowledgeSources;
     }
 
     // 5. 인덱싱 파이프라인 실행
@@ -156,9 +120,3 @@ export async function POST(
     );
   }
 }
-
-// ============================================================
-// 테스트용 내보내기
-// ============================================================
-
-export { readKnowledgeSources };
