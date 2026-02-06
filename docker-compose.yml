@@ -1,4 +1,61 @@
 services:
+  # ============================================================
+  # Nginx 리버스 프록시
+  # ============================================================
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - blog-app
+      - resume-app
+      - llm-app
+    restart: unless-stopped
+
+  # ============================================================
+  # Blog (Next.js)
+  # ============================================================
+  blog-app:
+    build:
+      context: .
+      dockerfile: apps/blog/Dockerfile
+    expose:
+      - "3000"
+    restart: unless-stopped
+
+  # ============================================================
+  # Resume (Next.js)
+  # ============================================================
+  resume-app:
+    build:
+      context: .
+      dockerfile: apps/resume/Dockerfile
+    expose:
+      - "3000"
+    restart: unless-stopped
+
+  # ============================================================
+  # LLM (Next.js + Qdrant)
+  # ============================================================
+  llm-app:
+    build:
+      context: .
+      dockerfile: apps/llm/Dockerfile
+    expose:
+      - "3000"
+    env_file:
+      - apps/llm/.env
+    environment:
+      - QDRANT_URL=http://qdrant:6333
+    depends_on:
+      - qdrant
+    restart: unless-stopped
+
+  # ============================================================
+  # Qdrant 벡터 DB
+  # ============================================================
   qdrant:
     image: qdrant/qdrant:latest
     ports:
@@ -6,18 +63,6 @@ services:
       - "6334:6334"
     volumes:
       - qdrant_data:/qdrant/storage
-    restart: unless-stopped
-
-  llm-app:
-    build:
-      context: .
-      dockerfile: apps/llm/Dockerfile
-    ports:
-      - "3002:3000"
-    env_file:
-      - apps/llm/.env
-    depends_on:
-      - qdrant
     restart: unless-stopped
 
 volumes:
