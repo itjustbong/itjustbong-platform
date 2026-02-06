@@ -18,6 +18,7 @@ function createMockDeps(
 ): IndexerDependencies {
   return {
     vectorStore: {
+      ensureCollection: vi.fn().mockResolvedValue(undefined),
       getContentHashByUrl: vi.fn().mockResolvedValue(null),
       deleteBySourceUrl: vi.fn().mockResolvedValue(undefined),
       upsertPoints: vi.fn().mockResolvedValue(undefined),
@@ -104,6 +105,7 @@ describe("runIndexingPipeline - URL 소스", () => {
         } satisfies CollectedContent;
       }),
       vectorStore: {
+        ensureCollection: vi.fn().mockResolvedValue(undefined),
         getContentHashByUrl: vi.fn().mockImplementation(async () => {
           callOrder.push("hashCheck");
           return null;
@@ -150,6 +152,7 @@ describe("runIndexingPipeline - URL 소스", () => {
   it("콘텐츠 해시가 동일하면 건너뛴다", async () => {
     const deps = createMockDeps({
       vectorStore: {
+        ensureCollection: vi.fn().mockResolvedValue(undefined),
         getContentHashByUrl: vi
           .fn()
           .mockResolvedValue("abc123hash"),
@@ -171,6 +174,7 @@ describe("runIndexingPipeline - URL 소스", () => {
   it("콘텐츠 해시가 다르면 기존 데이터를 삭제하고 업데이트한다", async () => {
     const deps = createMockDeps({
       vectorStore: {
+        ensureCollection: vi.fn().mockResolvedValue(undefined),
         getContentHashByUrl: vi
           .fn()
           .mockResolvedValue("old-hash"),
@@ -279,6 +283,7 @@ describe("runIndexingPipeline - 텍스트 소스", () => {
   it("텍스트 소스의 해시가 동일하면 건너뛴다", async () => {
     const deps = createMockDeps({
       vectorStore: {
+        ensureCollection: vi.fn().mockResolvedValue(undefined),
         getContentHashByUrl: vi
           .fn()
           .mockResolvedValue("text-hash-123"),

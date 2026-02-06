@@ -230,6 +230,9 @@ async function runIndexingPipeline(
       dependencies?.hashGenerator ?? generateContentHash,
   };
 
+  // 컬렉션이 없으면 자동 생성한다
+  await deps.vectorStore.ensureCollection();
+
   const results: IndexResult[] = [];
 
   for (const source of sources) {

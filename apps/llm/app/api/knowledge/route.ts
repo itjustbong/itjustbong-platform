@@ -182,6 +182,9 @@ export async function GET(
     const config = readKnowledgeConfig();
     const vectorStore = new VectorStore();
 
+    // 컬렉션이 없으면 자동 생성한다
+    await vectorStore.ensureCollection();
+
     // 각 소스의 인덱싱 상태를 확인한다
     const sourcesWithStatus: KnowledgeSourceWithStatus[] =
       await Promise.all(

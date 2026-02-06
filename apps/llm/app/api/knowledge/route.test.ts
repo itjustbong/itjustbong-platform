@@ -54,6 +54,7 @@ const mockGetContentHashByUrl = vi.fn();
 vi.mock("../../../lib/services/vector-store", () => {
   return {
     VectorStore: class MockVectorStore {
+      ensureCollection = vi.fn().mockResolvedValue(undefined);
       deleteBySourceUrl = mockDeleteBySourceUrl;
       getContentHashByUrl = mockGetContentHashByUrl;
     },
