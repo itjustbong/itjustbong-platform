@@ -124,6 +124,9 @@ async function hybridSearch(
 
   const prefetchLimit = limit * PREFETCH_MULTIPLIER;
 
+  // 0. 컬렉션이 존재하지 않으면 생성한다
+  await store.ensureCollection();
+
   // 1. 쿼리를 벡터로 변환
   const queryVector = await embed(query);
 
