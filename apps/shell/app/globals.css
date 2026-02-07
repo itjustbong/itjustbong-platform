@@ -1,4 +1,14 @@
+/**
+ * Shell 앱 글로벌 스타일
+ * 간단한 랜딩 페이지용 스타일
+ */
+
+/* Tailwind CSS 기본 import (앱에서 직접) */
 @import "tailwindcss";
+
+/* packages/ui 컴포넌트들을 Tailwind 스캔 대상에 포함 */
+@source "../../../packages/ui/src/**/*.tsx";
+@source "../../../packages/shared/src/**/*.ts";
 
 :root {
   --background: #ffffff;

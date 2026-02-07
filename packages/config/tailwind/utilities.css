@@ -1,0 +1,138 @@
+/**
+ * 공용 유틸리티 클래스 및 기본 스타일
+ */
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
+  }
+
+  /* Typography - Apple/Toss style */
+  h1 {
+    @apply text-4xl font-bold tracking-tight md:text-5xl;
+  }
+  h2 {
+    @apply text-2xl font-semibold tracking-tight md:text-3xl;
+  }
+  h3 {
+    @apply text-xl font-semibold tracking-tight md:text-2xl;
+  }
+
+  /* Smooth transitions */
+  a,
+  button {
+    @apply transition-colors duration-200;
+  }
+
+  /* Selection */
+  ::selection {
+    @apply bg-primary/20 text-foreground;
+  }
+}
+
+/* 공용 Prose 스타일 (마크다운/블로그 콘텐츠) */
+.prose {
+  @apply text-base leading-relaxed;
+  letter-spacing: -0.01em;
+}
+
+.prose p {
+  @apply my-4;
+}
+
+.prose h1,
+.prose h2,
+.prose h3 {
+  @apply mt-8 mb-4 font-semibold tracking-tight;
+}
+
+.prose h1 {
+  @apply text-2xl;
+}
+
+.prose h2 {
+  @apply text-xl;
+}
+
+.prose h3 {
+  @apply text-lg;
+}
+
+.prose ul,
+.prose ol {
+  @apply my-4 pl-6;
+}
+
+.prose ul {
+  @apply list-disc;
+}
+
+.prose ol {
+  @apply list-decimal;
+}
+
+.prose li {
+  @apply my-1.5;
+}
+
+.prose blockquote {
+  @apply my-4 border-l-4 border-primary/30 bg-muted/50 py-3 pl-4 pr-4 italic rounded-r-lg;
+}
+
+.prose code {
+  @apply bg-muted rounded-md px-1.5 py-0.5 font-mono text-sm font-medium;
+}
+
+.prose pre {
+  @apply my-6 overflow-x-auto rounded-xl bg-zinc-900 p-5 text-zinc-100;
+}
+
+.prose pre code {
+  @apply bg-transparent p-0 text-inherit;
+}
+
+.prose a {
+  @apply text-primary font-medium underline underline-offset-2 decoration-primary/40 hover:decoration-primary transition-colors;
+}
+
+.prose strong {
+  @apply font-semibold text-foreground;
+}
+
+/* 공용 스크롤바 스타일 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-border rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-muted-foreground/30;
+}
+
+/* 가로 스크롤 영역 스타일 */
+.horizontal-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+
+.horizontal-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.horizontal-scroll::-webkit-scrollbar-thumb {
+  @apply bg-border/50 rounded-full;
+}

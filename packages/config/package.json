@@ -2,9 +2,15 @@
   "name": "@repo/config",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "exports": {
     "./typescript/base": "./typescript/base.json",
+    "./typescript/nextjs": "./typescript/nextjs.json",
     "./eslint/base": "./eslint/base.js",
-    "./tailwind": "./tailwind/base.css"
+    "./eslint/nextjs": "./eslint/nextjs.mjs",
+    "./postcss/nextjs": "./postcss/nextjs.mjs",
+    "./tailwind": "./tailwind/base.css",
+    "./tailwind/theme": "./tailwind/theme.css",
+    "./tailwind/utilities": "./tailwind/utilities.css"
   }
 }

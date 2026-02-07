@@ -1,0 +1,95 @@
+/**
+ * 공용 테마 설정 - CSS 변수 (Light/Dark 모드)
+ * 모든 앱에서 동일한 색상 체계를 사용합니다.
+ */
+
+/* 라이트 모드 기본 */
+:root {
+  --radius: 0.75rem;
+  --background: oklch(0.995 0 0);
+  --foreground: oklch(0.13 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.13 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.13 0 0);
+
+  /* Blue accent color - elegant and modern */
+  --primary: oklch(0.55 0.2 255);
+  --primary-foreground: oklch(0.99 0 0);
+
+  --secondary: oklch(0.965 0 0);
+  --secondary-foreground: oklch(0.13 0 0);
+  --muted: oklch(0.965 0.005 260);
+  --muted-foreground: oklch(0.45 0 0);
+
+  /* Accent matches primary for consistency */
+  --accent: oklch(0.55 0.2 255);
+  --accent-foreground: oklch(0.99 0 0);
+
+  --destructive: oklch(0.55 0.22 25);
+  --border: oklch(0.92 0 0);
+  --input: oklch(0.92 0 0);
+  --ring: oklch(0.55 0.2 255);
+
+  /* Charts */
+  --chart-1: oklch(0.55 0.2 255);
+  --chart-2: oklch(0.6 0.15 200);
+  --chart-3: oklch(0.5 0.1 230);
+  --chart-4: oklch(0.65 0.18 270);
+  --chart-5: oklch(0.58 0.16 240);
+
+  /* Sidebar */
+  --sidebar: oklch(0.99 0 0);
+  --sidebar-foreground: oklch(0.13 0 0);
+  --sidebar-primary: oklch(0.55 0.2 255);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.965 0.01 255);
+  --sidebar-accent-foreground: oklch(0.13 0 0);
+  --sidebar-border: oklch(0.92 0 0);
+  --sidebar-ring: oklch(0.55 0.2 255);
+}
+
+/* 다크 모드 (.dark 클래스 기반) */
+.dark {
+  --background: oklch(0.1 0 0);
+  --foreground: oklch(0.96 0 0);
+  --card: oklch(0.14 0 0);
+  --card-foreground: oklch(0.96 0 0);
+  --popover: oklch(0.14 0 0);
+  --popover-foreground: oklch(0.96 0 0);
+
+  /* Blue accent - slightly brighter for dark mode */
+  --primary: oklch(0.65 0.2 255);
+  --primary-foreground: oklch(0.1 0 0);
+
+  --secondary: oklch(0.2 0 0);
+  --secondary-foreground: oklch(0.96 0 0);
+  --muted: oklch(0.2 0.01 260);
+  --muted-foreground: oklch(0.6 0 0);
+
+  /* Accent matches primary */
+  --accent: oklch(0.65 0.2 255);
+  --accent-foreground: oklch(0.1 0 0);
+
+  --destructive: oklch(0.6 0.2 25);
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.65 0.2 255);
+
+  /* Charts */
+  --chart-1: oklch(0.65 0.2 255);
+  --chart-2: oklch(0.6 0.17 200);
+  --chart-3: oklch(0.7 0.15 230);
+  --chart-4: oklch(0.6 0.2 270);
+  --chart-5: oklch(0.58 0.18 240);
+
+  /* Sidebar */
+  --sidebar: oklch(0.14 0 0);
+  --sidebar-foreground: oklch(0.96 0 0);
+  --sidebar-primary: oklch(0.65 0.2 255);
+  --sidebar-primary-foreground: oklch(0.1 0 0);
+  --sidebar-accent: oklch(0.2 0.02 255);
+  --sidebar-accent-foreground: oklch(0.96 0 0);
+  --sidebar-border: oklch(1 0 0 / 8%);
+  --sidebar-ring: oklch(0.65 0.2 255);
+}
