@@ -12,9 +12,9 @@ interface WelcomeScreenProps {
 }
 
 const suggestions = [
-  "어떤 기술 스택을 사용하나요?",
-  "모노레포 구조에 대해 알려주세요",
-  "블로그는 어떻게 만들었나요?",
+  "사용하는 기술 스택은 무엇인가요?",
+  "최근에 진행한 프로젝트나 관심있는 학습 분야는 어디인가요?",
+  "운영 중인 사이트들의 정보를 알려주세요!",
 ];
 
 export function WelcomeScreen({
@@ -44,15 +44,15 @@ export function WelcomeScreen({
   return (
     <div className="flex h-full flex-col items-center justify-center px-6 py-12">
       {/* 타이틀 영역 */}
-      <div className="mb-8 flex flex-col items-center">
-        <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/20 to-accent/30">
+      <div className="mb-8 flex flex-col items-start w-full max-w-2xl">
+        {/* <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/20 to-accent/30">
           <Sparkles className="h-7 w-7 text-primary" />
-        </div>
-        <h1 className="mb-2 text-3xl font-bold tracking-tight text-foreground">
-          무엇이든 물어보세요
+        </div> */}
+        <h1 className="mb-2 text-4xl font-bold tracking-tight text-foreground">
+          🙋🏻
         </h1>
         <p className="max-w-md text-center text-sm leading-relaxed text-muted-foreground">
-          블로그와 이력서를 기반으로 더 자세한 답변을 드립니다
+          블로그와 이력서를 기반으로 답변드립니다!
         </p>
       </div>
 
@@ -84,7 +84,7 @@ export function WelcomeScreen({
       </div>
 
       {/* 제안 질문 */}
-      <div className="mt-8 flex flex-col items-start gap-3">
+      <div className="mt-8 flex flex-col items-start gap-3 w-full max-w-2xl">
         {suggestions.map((text) => (
           <button
             key={text}
@@ -97,10 +97,6 @@ export function WelcomeScreen({
           </button>
         ))}
       </div>
-
-      <p className="mt-8 text-center text-xs text-muted-foreground/70">
-        블로그와 이력서 콘텐츠를 기반으로 답변합니다. 정확하지 않을 수 있습니다.
-      </p>
     </div>
   );
 }

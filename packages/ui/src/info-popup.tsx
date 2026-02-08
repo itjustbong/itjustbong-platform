@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { ExternalLink, LinkIcon } from "lucide-react";
 import {
   developerSites,
+  platformLinks,
   socialLinks,
 } from "@repo/shared/site-data";
 
@@ -46,7 +47,7 @@ export function InfoPopup() {
         {/* 개발자 사이트 수 뱃지 */}
         {developerSites.length > 0 && (
           <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-foreground/80 text-[10px] font-semibold text-background backdrop-blur-sm">
-            {developerSites.length}
+            {developerSites.length + platformLinks.length}
           </span>
         )}
       </button>
@@ -68,6 +69,37 @@ export function InfoPopup() {
             </div>
             <div className="space-y-1">
               {developerSites.map((site) => (
+                <a
+                  key={site.url}
+                  href={site.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all hover:bg-muted"
+                >
+                  <ExternalLink className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-primary" />
+                  <span className="text-sm font-medium text-foreground/90 transition-colors group-hover:text-primary">
+                    {site.name}
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* 구분선 */}
+          <div className="mb-5 border-t border-border/50" />
+
+          {/* 개발자의 플랫폼 */}
+          <div className="mb-5">
+            <div className="mb-3 flex items-center gap-2">
+              <span className="flex h-6 w-6 items-center justify-center rounded-md bg-primary/10 text-xs">
+                🧑🏻‍💻
+              </span>
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-foreground/70">
+                itjustbong 플랫폼
+              </h3>
+            </div>
+            <div className="space-y-1">
+            {platformLinks.map((site) => (
                 <a
                   key={site.url}
                   href={site.url}

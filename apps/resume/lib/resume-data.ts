@@ -191,7 +191,7 @@ export const personalProjects: Project[] = [
     name: "itjustbong 플랫폼",
     description: "`Turborepo` 모노레포 기반 개인 플랫폼 (blog, resume, llm)",
     period: "2025.12 ~",
-    url: "https://log.itjustbong.com",
+    url: "https://chat.itjustbong.com",
     highlights: [
       "**모노레포 아키텍처**: `Turborepo` + `pnpm workspace` 기반 apps(blog/resume/llm) + packages(ui/shared/config) 구조, 공유 패키지로 여러 `Next.js` 앱 간 *재사용성 및 개발 효율 향상*",
       "**blog**: `MDX` 기반 파일 시스템 콘텐츠 관리, sitemap/robots/JSON-LD/동적 OG 이미지 등 **SEO 최적화**, `Mermaid` 다이어그램 및 관리자 에디터 지원",

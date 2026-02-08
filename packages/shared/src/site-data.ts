@@ -20,6 +20,22 @@ export const developerSites: DeveloperSite[] = [
   },
 ];
 
+
+export const platformLinks: DeveloperSite[] = [
+  {
+    name: "테크 블로그",
+    url: "https://log.itjustbong.com/",
+  },
+  {
+    name: "RAG 기반 질의응답",
+    url: "https://chat.itjustbong.com/",
+  },
+  {
+    name: "이력서",
+    url: "https://resume.itjustbong.com/",
+  },
+];
+
 // 소셜 링크 정보
 export interface SocialLink {
   name: string;
@@ -42,3 +58,4 @@ export const socialLinks: SocialLink[] = [
     label: "LinkedIn",
   },
 ];
+

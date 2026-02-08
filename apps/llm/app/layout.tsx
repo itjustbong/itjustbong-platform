@@ -35,7 +35,7 @@ export default function RootLayout({
       >
         <ThemeProvider>
           <Header
-            subdomain="llm"
+            subdomain="chat"
             logoHref="/"
             showThemeToggle={false}
           />
