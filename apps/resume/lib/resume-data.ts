@@ -175,6 +175,19 @@ export const experiences: Experience[] = [
 
 export const personalProjects: Project[] = [
   {
+    id: "lemme-blind-date",
+    name: "Lemme Blind Date",
+    description: "친구의 친구를 소개시켜주는 **지인 네트워크 기반 매칭 서비스**",
+    period: "2026.02 ~",
+    url: "https://lemmeblind.date",
+    highlights: [
+      "**Next.js App Router 풀스택 구현**: Server Components + Server Actions로 별도 API 서버 없이 구현, `Drizzle ORM` + `Supabase PostgreSQL` 조합으로 **타입 안전한 DB 접근**",
+      "**Supabase RLS 기반 보안**: 데이터베이스 수준 행 단위 접근 제어(RLS) 정책 설계, 방장/등록자 권한 분리로 *애플리케이션 + DB 이중 검증* 구현",
+      "**다국어 및 캐싱 최적화**: `next-intl` 기반 i18n + IP 지역 감지 자동 로케일 설정, React `cache()` + `unstable_cache()` 조합으로 **DB 부하 감소**",
+    ],
+    image: "/projects/lemme-blind-date.png",
+  },
+  {
     id: "whales-wallet",
     name: "What's in Whale's Wallet?",
     description: "**SEC 13F** 공시 데이터 기반 기관 포트폴리오 탐색 서비스",

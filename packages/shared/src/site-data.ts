@@ -18,6 +18,11 @@ export const developerSites: DeveloperSite[] = [
     url: "https://whales-wallet.com/",
     description: "고래 지갑 추적 서비스",
   },
+    {
+    name: "Lemme Blind Date",
+    url: "https://lemmeblind.date",
+    description: "친구소개 플랫폼",
+  },
 ];
 
 
