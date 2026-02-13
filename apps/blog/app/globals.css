@@ -19,6 +19,54 @@
 
 /* Blog 앱 전용 스타일 */
 
+/* Code syntax highlighting - light mode: 가독성 향상을 위한 높은 대비 색상 */
+:root:not(.dark) .hljs,
+:root:not(.dark) .prose .hljs {
+  background: oklch(0.97 0.005 260);
+  color: #1a1f24;
+}
+:root:not(.dark) .hljs-keyword,
+:root:not(.dark) .hljs-selector-tag,
+:root:not(.dark) .hljs-literal,
+:root:not(.dark) .hljs-section,
+:root:not(.dark) .hljs-link {
+  color: #c7254e;
+}
+:root:not(.dark) .hljs-string,
+:root:not(.dark) .hljs-title,
+:root:not(.dark) .hljs-name,
+:root:not(.dark) .hljs-type,
+:root:not(.dark) .hljs-attribute,
+:root:not(.dark) .hljs-symbol,
+:root:not(.dark) .hljs-bullet,
+:root:not(.dark) .hljs-addition,
+:root:not(.dark) .hljs-variable,
+:root:not(.dark) .hljs-template-tag,
+:root:not(.dark) .hljs-template-variable {
+  color: #0c4a6e;
+}
+:root:not(.dark) .hljs-comment,
+:root:not(.dark) .hljs-quote,
+:root:not(.dark) .hljs-deletion,
+:root:not(.dark) .hljs-meta {
+  color: #57606a;
+}
+:root:not(.dark) .hljs-function,
+:root:not(.dark) .hljs-params {
+  color: #6f42c1;
+}
+:root:not(.dark) .hljs-number {
+  color: #0969da;
+}
+:root:not(.dark) .hljs-built_in {
+  color: #b45309;
+}
+:root:not(.dark) .hljs-attr,
+:root:not(.dark) .hljs-meta .hljs-keyword,
+:root:not(.dark) .hljs-operator {
+  color: #0550ae;
+}
+
 /* Code syntax highlighting - dark mode override for class-based theme */
 .dark .hljs {
   background: oklch(0.14 0 0);
