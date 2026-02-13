@@ -5,12 +5,12 @@
 
 ## 서비스 개요
 
-| 서비스 | 경로 | 설명 | 기본 포트 |
-| --- | --- | --- | --- |
-| blog | `apps/blog` | MDX 기반 기술 블로그, 관리자/에디터, OG 이미지 생성 | `3000` |
-| resume | `apps/resume` | 웹 이력서 및 PDF 생성/다운로드 | `3001` |
-| llm | `apps/llm` | RAG 기반 Q&A 서비스 (Gemini + Qdrant) | `3002` |
-| shell | `apps/shell` | 향후 확장용 셸 앱(기본 골격) | `3003` |
+| 서비스 | 경로 | 설명 | 기본 포트 | 서비스 주소 |
+| --- | --- | --- | --- | --- |
+| blog | `apps/blog` | MDX 기반 기술 블로그, 관리자/에디터, OG 이미지 생성 | `3000` | https://log.itjustbong.com/ |
+| resume | `apps/resume` | 웹 이력서 및 PDF 생성/다운로드 | `3001` | https://resume.itjustbong.com/ |
+| llm | `apps/llm` | RAG 기반 Q&A 서비스 (Gemini + Qdrant) | `3002` | https://chat.itjustbong.com/ |
+| shell | `apps/shell` | 향후 확장용 셸 앱(기본 골격) | `3003` | - |
 
 ## 모노레포 구조
 

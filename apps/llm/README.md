@@ -3,6 +3,10 @@
 블로그와 이력서 콘텐츠를 기반으로 한 RAG(Retrieval-Augmented Generation) 답변 서비스.
 사용자가 질문을 입력하면 사전에 등록된 지식 데이터를 검색하여 출처가 명시된 한국어 답변을 스트리밍으로 생성한다.
 
+## 서비스 주소
+
+- https://chat.itjustbong.com/
+
 ## 기술 스택
 
 - **프레임워크**: Next.js 16 (App Router)
