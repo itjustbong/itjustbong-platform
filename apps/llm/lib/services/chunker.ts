@@ -2,8 +2,8 @@ import type { ChunkMetadata, ChunkOptions, TextChunk } from "../types";
 
 /** 기본 청킹 옵션 */
 const DEFAULT_CHUNK_OPTIONS: ChunkOptions = {
-  chunkSize: 500,
-  chunkOverlap: 100,
+  chunkSize: 1000,
+  chunkOverlap: 200,
 };
 
 /**

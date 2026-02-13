@@ -225,11 +225,11 @@ describe("chunkText", () => {
     });
   });
 
-  it("기본 옵션(chunkSize=500, chunkOverlap=100)을 사용한다", () => {
-    const text = "가".repeat(1000);
+  it("기본 옵션(chunkSize=1000, chunkOverlap=200)을 사용한다", () => {
+    const text = "가".repeat(2000);
     const result = chunkText(text, testMetadata);
     result.forEach((chunk) => {
-      expect(chunk.text.length).toBeLessThanOrEqual(500);
+      expect(chunk.text.length).toBeLessThanOrEqual(1000);
     });
   });
 
@@ -267,7 +267,7 @@ describe("chunkText", () => {
   it("옵션을 부분적으로 전달하면 나머지는 기본값을 사용한다", () => {
     const text = "가".repeat(1000);
     const result = chunkText(text, testMetadata, { chunkSize: 200 });
-    // chunkOverlap은 기본값 100이 적용되어야 한다
+    // chunkOverlap은 기본값 200이 적용되어야 한다
     result.forEach((chunk) => {
       expect(chunk.text.length).toBeLessThanOrEqual(200);
     });
@@ -292,11 +292,11 @@ describe("chunkText", () => {
 // ============================================================
 
 describe("DEFAULT_CHUNK_OPTIONS", () => {
-  it("기본 chunkSize는 500이다", () => {
-    expect(DEFAULT_CHUNK_OPTIONS.chunkSize).toBe(500);
+  it("기본 chunkSize는 1000이다", () => {
+    expect(DEFAULT_CHUNK_OPTIONS.chunkSize).toBe(1000);
   });
 
-  it("기본 chunkOverlap은 100이다", () => {
-    expect(DEFAULT_CHUNK_OPTIONS.chunkOverlap).toBe(100);
+  it("기본 chunkOverlap은 200이다", () => {
+    expect(DEFAULT_CHUNK_OPTIONS.chunkOverlap).toBe(200);
   });
 });
