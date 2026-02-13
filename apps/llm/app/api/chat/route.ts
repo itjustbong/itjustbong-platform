@@ -7,7 +7,7 @@ import { RateLimiter } from "../../../lib/services/rate-limiter";
 import { ConversationManager } from "../../../lib/services/conversation";
 import { hybridSearch } from "../../../lib/services/hybrid-search";
 import { generateAnswer } from "../../../lib/services/answer-generator";
-import type { ConversationMessage } from "../../../lib/types";
+import type { ConversationMessage, SearchResult } from "../../../lib/types";
 
 // ============================================================
 // 싱글톤 인스턴스
@@ -51,6 +51,27 @@ function getClientIp(request: NextRequest): string {
  */
 function isValidQuestion(question: string): boolean {
   return question.trim().length > 0;
+}
+
+/**
+ * Qdrant 연결 실패(ECONNREFUSED 등)로 판단되는 에러인지 확인한다.
+ * 로컬 개발 시 Qdrant 미실행 시 graceful degradation을 위해 사용한다.
+ */
+function isQdrantConnectionError(error: unknown): boolean {
+  if (!(error instanceof TypeError) || !error.message.includes("fetch failed")) {
+    return false;
+  }
+  const cause = (error as Error & { cause?: unknown }).cause;
+  if (!cause) return false;
+
+  // cause.code (일반 Error)
+  const code = (cause as { code?: string }).code;
+  if (code === "ECONNREFUSED") return true;
+
+  // AggregateError.errors 내부 (Node.js fetch 실패 시)
+  const agg = cause as { errors?: Array<{ code?: string }> };
+  const codes = agg.errors?.map((e) => e.code) ?? [];
+  return codes.includes("ECONNREFUSED");
 }
 
 /**
@@ -164,8 +185,20 @@ export async function POST(
         currentSessionId
       );
 
-    // 5. Hybrid Search로 관련 문서 검색
-    const searchResults = await hybridSearch(question);
+    // 5. Hybrid Search로 관련 문서 검색 (최대 5개)
+    let searchResults: SearchResult[];
+    try {
+      searchResults = await hybridSearch(question, 5);
+    } catch (searchError) {
+      if (isQdrantConnectionError(searchError)) {
+        console.warn(
+          "[LLM] Qdrant 연결 실패 — RAG 없이 응답합니다. Qdrant를 실행하세요: docker compose up qdrant -d"
+        );
+        searchResults = [];
+      } else {
+        throw searchError;
+      }
+    }
 
     // 6. Answer Generator로 스트리밍 답변 생성
     const result = await generateAnswer({

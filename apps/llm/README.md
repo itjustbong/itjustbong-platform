@@ -96,6 +96,18 @@ pnpm dev:llm
 
 또는 `knowledge.json`을 직접 편집한 후 관리 페이지에서 인덱싱을 실행할 수 있다.
 
+### 문제 해결: `ECONNREFUSED` / `fetch failed` 오류
+
+채팅 API에서 `TypeError: fetch failed` 또는 `ECONNREFUSED`가 발생하면 **Qdrant가 실행 중이지 않은 상태**입니다.
+
+1. Qdrant를 실행하세요:
+   ```bash
+   docker compose up qdrant -d
+   ```
+2. Qdrant 실행 후에는 RAG(문서 검색 기반 답변)가 정상 동작합니다.
+
+**참고**: Qdrant가 없어도 채팅은 동작합니다. 문서 검색 없이 LLM만 사용한 응답이 반환됩니다. 콘솔에 `[LLM] Qdrant 연결 실패` 경고가 표시됩니다.
+
 ## 테스트
 
 ```bash
