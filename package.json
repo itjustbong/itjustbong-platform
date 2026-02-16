@@ -7,11 +7,11 @@
     "dev:blog": "turbo run dev --filter=@apps/blog",
     "dev:resume": "turbo run dev --filter=@apps/resume",
     "dev:llm": "turbo run dev --filter=@apps/llm",
-    "dev:shell": "turbo run dev --filter=@apps/shell",
+    "dev:hub": "turbo run dev --filter=@apps/hub",
     "build:blog": "turbo run build --filter=@apps/blog",
     "build:resume": "turbo run build --filter=@apps/resume",
     "build:llm": "turbo run build --filter=@apps/llm",
-    "build:shell": "turbo run build --filter=@apps/shell",
+    "build:hub": "turbo run build --filter=@apps/hub",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\""

@@ -1,0 +1,19 @@
+{
+  "name": "@apps/hub",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite --host --port 3003",
+    "build": "vite build",
+    "preview": "vite preview --host --port 3003"
+  },
+  "dependencies": {
+    "@repo/shared": "workspace:*",
+    "gsap": "^3.14.2"
+  },
+  "devDependencies": {
+    "@repo/config": "workspace:*",
+    "typescript": "^5",
+    "vite": "^7.1.7"
+  }
+}

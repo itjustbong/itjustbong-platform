@@ -1,0 +1,864 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap");
+
+/* ── Design Tokens (Apple Vision Pro Liquid Glass) ──── */
+
+:root {
+  --bg-1: #f5ede4;
+  --bg-2: #ebe3d8;
+  --bg-3: #f0e8de;
+
+  --glass-bg: rgba(255, 255, 255, 0.3);
+  --glass-bg-strong: rgba(255, 255, 255, 0.45);
+  --glass-border: rgba(255, 255, 255, 0.55);
+  --glass-border-subtle: rgba(255, 255, 255, 0.35);
+  --glass-blur: blur(40px) saturate(180%);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.03);
+  --glass-shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.04);
+  --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+
+  --text-1: #1c1917;
+  --text-2: #57534e;
+  --text-3: #a8a29e;
+  --text-4: #d6d3d1;
+
+  --accent: #6366f1;
+  --accent-2: #8b5cf6;
+  --accent-soft: rgba(99, 102, 241, 0.1);
+
+  --radius-xl: 28px;
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+  --radius-pill: 999px;
+
+  --panel-max-w: 560px;
+  --card-w: 560px;
+  --card-h: 680px;
+  --toolbar-h: 44px;
+
+  --px: 0;
+  --py: 0;
+}
+
+/* ── Reset ──────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: "Inter", "Noto Sans KR", system-ui, sans-serif;
+  font-size: 0.875rem;
+  color: var(--text-1);
+  line-height: 1.6;
+  overflow: hidden;
+  height: 100dvh;
+  width: 100vw;
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+a { color: inherit; text-decoration: none; }
+button { border: none; background: none; cursor: pointer; font: inherit; color: inherit; }
+ul { list-style: none; }
+
+/* ── Ambient Background ─────────────────────────────── */
+
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(145deg, var(--bg-1) 0%, var(--bg-2) 30%, var(--bg-3) 55%, var(--bg-2) 80%, var(--bg-1) 100%);
+}
+
+.bg__orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  will-change: transform;
+}
+
+.bg__orb--1 {
+  width: clamp(280px, 45vw, 600px);
+  aspect-ratio: 1;
+  top: -10%;
+  left: -5%;
+  background: radial-gradient(circle, #f9a875 0%, transparent 70%);
+  opacity: 0.4;
+  transform: translate3d(calc(var(--px) * -15px), calc(var(--py) * -10px), 0);
+}
+
+.bg__orb--2 {
+  width: clamp(220px, 38vw, 520px);
+  aspect-ratio: 1;
+  top: 5%;
+  right: -8%;
+  background: radial-gradient(circle, #fcd34d 0%, transparent 70%);
+  opacity: 0.25;
+  transform: translate3d(calc(var(--px) * 12px), calc(var(--py) * -8px), 0);
+}
+
+.bg__orb--3 {
+  width: clamp(200px, 32vw, 450px);
+  aspect-ratio: 1;
+  bottom: 0%;
+  left: 20%;
+  background: radial-gradient(circle, #e9b8d4 0%, transparent 70%);
+  opacity: 0.3;
+  transform: translate3d(calc(var(--px) * -8px), calc(var(--py) * 6px), 0);
+}
+
+/* ── Floating Header (Glass Pill) ───────────────────── */
+
+.header {
+  position: fixed;
+  z-index: 50;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.header__glass {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 6px 6px 18px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(145deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.32) 50%, rgba(255,255,255,0.42) 100%);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow), var(--glass-highlight);
+  pointer-events: auto;
+}
+
+.header__brand {
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-1);
+  opacity: 0.75;
+  white-space: nowrap;
+}
+
+.header__divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.header__actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.header__social-link,
+.header__menu-btn {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: var(--text-2);
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.header__social-link:hover,
+.header__menu-btn:hover {
+  color: var(--text-1);
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.header__social-link svg { width: 16px; height: 16px; }
+.header__menu-btn svg { width: 17px; height: 17px; }
+
+/* ── Menu Overlay ───────────────────────────────────── */
+
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.menu-overlay.is-open { display: flex; }
+
+.menu-overlay__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.menu__panel {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 480px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(145deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.35) 50%, rgba(255,255,255,0.45) 100%);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow-lg), var(--glass-highlight);
+  overflow: hidden;
+}
+
+.menu__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  flex-shrink: 0;
+}
+
+.menu__title {
+  font-family: "Noto Sans KR", "Inter", sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text-1);
+}
+
+.menu__close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--text-2);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.menu__close:hover { background: rgba(0,0,0,0.06); color: var(--text-1); }
+.menu__close svg { width: 18px; height: 18px; }
+
+.menu__list {
+  overflow-y: auto;
+  padding: 8px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.menu__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 12px;
+  border-radius: var(--radius-md);
+  text-align: left;
+  transition: background 0.2s ease;
+  cursor: pointer;
+}
+
+.menu__item:hover { background: rgba(0, 0, 0, 0.04); }
+.menu__item.is-current { background: var(--accent-soft); }
+
+.menu__item-num {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: var(--accent);
+  background: var(--accent-soft);
+  margin-top: 2px;
+}
+
+.menu__item-body { flex: 1; min-width: 0; }
+
+.menu__item-label {
+  display: block;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin-bottom: 2px;
+}
+
+.menu__item-name {
+  font-family: "Noto Sans KR", "Inter", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-1);
+  line-height: 1.3;
+}
+
+.menu__item-desc {
+  font-size: 0.75rem;
+  color: var(--text-2);
+  margin-top: 3px;
+  line-height: 1.5;
+}
+
+.menu__item-url {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text-3);
+  margin-top: 6px;
+}
+
+.menu__item-url svg { width: 11px; height: 11px; opacity: 0.6; }
+
+/* ── Carousel ───────────────────────────────────────── */
+
+.carousel {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.carousel__stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  perspective: 1500px;
+  perspective-origin: 50% 46%;
+}
+
+/* ── Card ───────────────────────────────────────────── */
+
+.card {
+  position: absolute;
+  top: 46%;
+  left: 50%;
+  width: var(--card-w);
+  height: var(--card-h);
+  cursor: pointer;
+  will-change: transform, opacity;
+}
+
+.card__glass {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  position: relative;
+  background: linear-gradient(145deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.22) 40%, rgba(255,255,255,0.35) 100%);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow-lg), var(--glass-highlight);
+  transition: box-shadow 0.4s ease;
+}
+
+.card.is-focused .card__glass {
+  box-shadow: var(--glass-shadow-lg), var(--glass-highlight), 0 0 0 1px rgba(99,102,241,0.12), 0 0 60px rgba(99,102,241,0.06);
+}
+
+.card__glass::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 8%;
+  right: 8%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.85), transparent);
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* ── Card Toolbar (Vision Pro Window Bar) ───────────── */
+
+.card__toolbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 7;
+  height: var(--toolbar-h);
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  gap: 8px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.55) 0%,
+    rgba(255, 255, 255, 0.38) 100%
+  );
+  backdrop-filter: blur(28px) saturate(170%);
+  -webkit-backdrop-filter: blur(28px) saturate(170%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.45);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease 0.25s;
+}
+
+.card.is-focused .card__toolbar {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.card__toolbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.card__toolbar-arrow {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--text-2);
+  transition: all 0.2s ease;
+}
+
+.card__toolbar-arrow:hover {
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--text-1);
+}
+
+.card__toolbar-arrow:disabled {
+  opacity: 0.22;
+  pointer-events: none;
+}
+
+.card__toolbar-arrow svg {
+  width: 14px;
+  height: 14px;
+}
+
+.card__toolbar-url {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 30px;
+  padding: 0 14px;
+  border-radius: var(--radius-pill);
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: default;
+}
+
+.card__toolbar-url svg {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  opacity: 0.5;
+}
+
+/* ── Card Info (Unfocused state) ────────────────────── */
+
+.card__info {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 36px 28px;
+  text-align: center;
+  transition: opacity 0.4s ease;
+}
+
+.card.is-focused .card__info {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.card__number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  margin-bottom: 20px;
+}
+
+.card__headline {
+  display: inline-block;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.card__name {
+  font-family: "Noto Sans KR", "Inter", sans-serif;
+  font-size: clamp(1.15rem, 2.5vw, 1.5rem);
+  font-weight: 800;
+  line-height: 1.25;
+  color: var(--text-1);
+  margin-bottom: 10px;
+}
+
+.card__desc {
+  font-size: 0.8rem;
+  color: var(--text-2);
+  line-height: 1.65;
+  max-width: 30ch;
+  margin-bottom: 20px;
+}
+
+.card__url {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-3);
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.card__url svg { width: 12px; height: 12px; opacity: 0.5; }
+
+/* ── Welcome Card ───────────────────────────────────── */
+
+.card--welcome.is-focused .card__info {
+  opacity: 1;
+  pointer-events: auto;
+  padding-top: calc(var(--toolbar-h) + 20px);
+}
+
+.card--welcome .card__number svg {
+  width: 16px;
+  height: 16px;
+}
+
+.card__welcome-greeting {
+  font-size: 0.8rem;
+  font-weight: 300;
+  color: var(--text-2);
+  margin-bottom: 32px;
+}
+
+.card--welcome .card__name {
+  font-size: clamp(1.3rem, 3vw, 1.8rem);
+  margin-bottom: 12px;
+}
+
+.card__welcome-brand {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.card__welcome-gesture {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--text-3);
+  margin-top: 4px;
+}
+
+.card__welcome-arrow {
+  font-size: 1rem;
+  opacity: 0.5;
+}
+
+.card__welcome-track {
+  width: 60px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.card__welcome-dot {
+  width: 16px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--accent);
+  opacity: 0.6;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: gesture-slide 2.5s ease-in-out infinite;
+}
+
+/* ── Card Iframe (Focused state — below toolbar) ───── */
+
+.card__iframe-wrap {
+  position: absolute;
+  top: var(--toolbar-h);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease 0.25s;
+}
+
+.card.is-focused .card__iframe-wrap {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.card__iframe-wrap iframe {
+  width: 125%;
+  height: 125%;
+  border: none;
+  background: #fff;
+  transform: scale(0.8);
+  transform-origin: 0 0;
+}
+
+.card__loader {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--text-3);
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+.card__loader.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.card__spinner {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(0, 0, 0, 0.08);
+  border-top-color: var(--accent);
+  animation: spin 0.8s linear infinite;
+}
+
+/* ── Info Panel (Bottom) ────────────────────────────── */
+
+.info-panel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 30;
+  padding: 0 clamp(12px, 4vw, 24px) clamp(16px, 3vh, 28px);
+  pointer-events: none;
+}
+
+.info-panel__glass {
+  max-width: var(--panel-max-w);
+  margin: 0 auto;
+  padding: 14px 22px 18px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(145deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.4) 100%);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow-lg), var(--glass-highlight);
+  pointer-events: auto;
+}
+
+.info-panel__dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.nav-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.12);
+  transition: all 0.35s ease;
+  padding: 0;
+}
+
+.nav-dot.is-active {
+  width: 24px;
+  border-radius: 4px;
+  background: var(--accent);
+}
+
+.info-panel__body {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.info-panel__text { flex: 1; min-width: 0; }
+
+.info-panel__label {
+  display: inline-block;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 3px;
+}
+
+.info-panel__name {
+  font-family: "Noto Sans KR", "Inter", sans-serif;
+  font-size: clamp(0.95rem, 2.5vw, 1.2rem);
+  font-weight: 800;
+  line-height: 1.25;
+  color: var(--text-1);
+  margin-bottom: 3px;
+}
+
+.info-panel__desc {
+  font-size: 0.75rem;
+  color: var(--text-2);
+  line-height: 1.55;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.info-panel__cta {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border-radius: var(--radius-md);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.info-panel__cta:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(99,102,241,0.4); }
+.info-panel__cta:active { transform: translateY(0); }
+.info-panel__cta svg { width: 14px; height: 14px; }
+
+/* ── Focus Visible ──────────────────────────────────── */
+
+.card__toolbar-arrow:focus-visible,
+.nav-dot:focus-visible,
+.header__social-link:focus-visible,
+.header__menu-btn:focus-visible,
+.menu__close:focus-visible,
+.menu__item:focus-visible,
+.info-panel__cta:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ── Responsive: Tablet ─────────────────────────────── */
+
+@media (max-width: 1024px) {
+  .carousel__stage { perspective: 1200px; }
+}
+
+/* ── Responsive: Mobile ─────────────────────────────── */
+
+@media (max-width: 640px) {
+  :root { --toolbar-h: 40px; }
+
+  .header__glass { padding: 5px 5px 5px 14px; gap: 6px; }
+  .header__brand { font-size: 0.76rem; }
+  .header__social-link, .header__menu-btn { width: 30px; height: 30px; }
+  .header__social-link svg, .header__menu-btn svg { width: 15px; height: 15px; }
+  .header__divider { height: 16px; }
+
+  .carousel__stage { perspective: 900px; perspective-origin: 50% 44%; }
+  .card { top: 44%; }
+
+  .card__toolbar { padding: 0 6px; gap: 6px; }
+  .card__toolbar-arrow { width: 28px; height: 28px; }
+  .card__toolbar-arrow svg { width: 12px; height: 12px; }
+  .card__toolbar-url { height: 28px; font-size: 0.68rem; padding: 0 10px; }
+
+  .info-panel__glass { padding: 10px 14px 14px; }
+  .info-panel__body { flex-direction: column; align-items: stretch; gap: 10px; }
+  .info-panel__cta { justify-content: center; padding: 11px; }
+  .info-panel__dots { margin-bottom: 8px; }
+
+  .card__info { padding: 24px 20px; }
+  .card__number { width: 30px; height: 30px; margin-bottom: 14px; }
+  .card__name { font-size: 1rem; }
+  .card__desc { font-size: 0.76rem; margin-bottom: 14px; }
+
+  .card--welcome .card__name { font-size: clamp(1.1rem, 5vw, 1.5rem); }
+
+  .menu__panel { max-height: 85vh; border-radius: var(--radius-lg); }
+  .menu__header { padding: 16px 16px 12px; }
+  .menu__list { padding: 6px 8px 8px; }
+  .menu__item { padding: 12px 10px; }
+}
+
+/* ── Reduced Motion ─────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .bg__orb { transform: none !important; }
+}
+
+/* ── Keyframes ──────────────────────────────────────── */
+
+@keyframes gesture-slide {
+  0%, 100% { transform: translateX(calc(-50% - 18px)); }
+  50% { transform: translateX(calc(-50% + 18px)); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

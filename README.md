@@ -1,7 +1,7 @@
 # itjustbong Platform Monorepo
 
 개인 서비스들을 하나의 Turborepo로 통합한 멀티 서비스 레포지토리입니다.
-현재 `blog`, `resume`, `llm` 서비스를 운영 중이며, 공통 패키지(`ui`, `shared`, `config`)를 통해 코드와 설정을 재사용합니다.
+현재 `blog`, `resume`, `llm`, `hub` 서비스를 운영 중이며, 공통 패키지(`ui`, `shared`, `config`)를 통해 코드와 설정을 재사용합니다.
 
 ## 서비스 개요
 
@@ -10,7 +10,7 @@
 | blog | `apps/blog` | MDX 기반 기술 블로그, 관리자/에디터, OG 이미지 생성 | `3000` | https://log.itjustbong.com/ |
 | resume | `apps/resume` | 웹 이력서 및 PDF 생성/다운로드 | `3001` | https://resume.itjustbong.com/ |
 | llm | `apps/llm` | RAG 기반 Q&A 서비스 (Gemini + Qdrant) | `3002` | https://chat.itjustbong.com/ |
-| shell | `apps/shell` | 향후 확장용 셸 앱(기본 골격) | `3003` | - |
+| hub | `apps/hub` | 링크 허브 서비스 (Vite + Vanilla TS) | `3003` | - |
 
 ## 모노레포 구조
 
@@ -20,7 +20,7 @@
 │  ├─ blog/
 │  ├─ resume/
 │  ├─ llm/
-│  └─ shell/
+│  └─ hub/
 ├─ packages/
 │  ├─ ui/        # 공용 UI 컴포넌트
 │  ├─ shared/    # 공용 데이터/유틸
@@ -38,7 +38,7 @@ graph LR
     BLOG["apps/blog"]
     RESUME["apps/resume"]
     LLM["apps/llm"]
-    SHELL["apps/shell"]
+    HUB["apps/hub"]
   end
 
   subgraph Packages["Shared Packages"]
@@ -62,9 +62,9 @@ graph LR
   LLM --> CONFIG
   LLM --> QDRANT
 
-  SHELL --> UI
-  SHELL --> SHARED
-  SHELL --> CONFIG
+  HUB --> UI
+  HUB --> SHARED
+  HUB --> CONFIG
 ```
 
 ## LLM 요청 흐름
@@ -110,7 +110,7 @@ pnpm dev
 pnpm dev:blog
 pnpm dev:resume
 pnpm dev:llm
-pnpm dev:shell
+pnpm dev:hub
 ```
 
 ### 빌드/검사
@@ -128,6 +128,7 @@ pnpm format:check
 - `blog-app` (`3000`)
 - `resume-app` (`3001`)
 - `llm-app` (`3002`)
+- `hub-app` (`3003`)
 - `qdrant` (`6333`, `6334`)
 
 ```bash
